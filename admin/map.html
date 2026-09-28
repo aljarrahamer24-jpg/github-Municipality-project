@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>خريطة البلاغات | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="admin" data-active="map" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>خريطة البلاغات</span></nav>
+    <div class="page-header-row">
+        <div>
+          <h1 class="page-title">خريطة البلاغات</h1>
+          <p class="page-desc">التوزيع الجغرافي للبلاغات والمناطق الأكثر كثافة.</p>
+        </div>
+      </div>
+    </div>
+    <div class="stack-lg">
+      <!-- الفلاتر -->
+      <div class="card"><div class="card-body grid sm-cols-2 lg-cols-5" id="filters" style="align-items:end">
+        <div class="field"><label class="label" for="f-cat">نوع المشكلة</label><select class="select" id="f-cat" data-f="cat"></select></div>
+        <div class="field"><label class="label" for="f-period">الفترة الزمنية</label>
+          <select class="select" id="f-period" data-f="period"><option value="7">آخر 7 أيام</option><option value="30">آخر 30 يوماً</option><option value="90">آخر 3 أشهر</option><option value="120" selected>آخر 4 أشهر</option></select></div>
+        <div class="field"><label class="label" for="f-dist">المنطقة</label><select class="select" id="f-dist" data-f="dist"></select></div>
+        <div class="field"><label class="label" for="f-status">الحالة</label><select class="select" id="f-status" data-f="status"></select></div>
+        <div class="segmented" id="modes" role="group" aria-label="طريقة العرض">
+          <button type="button" data-mode="markers"><i data-icon="map-pin"></i>نقاط</button>
+          <button type="button" data-mode="heat"><i data-icon="flame"></i>حرارية</button>
+          <button type="button" data-mode="both" class="active"><i data-icon="layers"></i>معاً</button>
+        </div>
+      </div></div>
+
+      <div class="grid grid-lg xl-aside">
+        <div class="card card-clip relative">
+          <div id="map" class="h-map flush"></div>
+          <div class="map-legend">
+            <p class="fw-600 mb-3">الحالة</p>
+            <div class="legend-grid" id="legend"></div>
+            <p class="c-3 mt-3" style="padding-top:8px;border-top:1px solid var(--line)">عدد البلاغات المعروضة: <b class="c-ink" id="count"></b></p>
+          </div>
+          <div class="map-popup-card" id="selected" hidden>
+            <button class="icon-btn close" id="sel-close" aria-label="إغلاق" style="width:28px;height:28px"><i data-icon="x"></i></button>
+            <div id="sel-body"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">المناطق الساخنة</h2><p class="card-sub">المناطق الأعلى في عدد البلاغات</p></div><i data-icon="flame" class="c-error"></i></div>
+          <div class="card-body" id="hot"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../assets/js/maps.js"></script>
+  <script src="../assets/js/pages/complaints-map.js"></script>
+</body>
+</html>

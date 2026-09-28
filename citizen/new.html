@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>تقديم بلاغ جديد | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="citizen" data-active="" data-root="../">
+  <main id="content">
+    <div class="container-md" style="margin-inline:auto">
+      <!-- النموذج -->
+      <div id="wizard">
+        <div class="mb-6">
+          <h1 class="text-2xl fw-700">تقديم بلاغ جديد</h1>
+          <p class="text-sm c-2 mt-1">أربع خطوات بسيطة — يستغرق أقل من دقيقتين.</p>
+        </div>
+        <ol class="wizard-steps" id="wsteps"></ol>
+
+        <div class="grid grid-lg layout-aside-sm">
+          <div class="card">
+            <div class="card-body">
+
+              <!-- الخطوة 1: نوع المشكلة -->
+              <section class="step-pane stack" data-step="0">
+                <div>
+                  <h2 class="fw-600">ما نوع المشكلة؟</h2>
+                  <p class="text-sm c-3 mt-1">سيتم تحويل البلاغ تلقائياً للقسم المختص.</p>
+                </div>
+                <div class="tiles" id="tiles"></div>
+                <p class="error-text text-sm" id="err-cat" hidden>يرجى اختيار نوع المشكلة للمتابعة.</p>
+              </section>
+
+              <!-- الخطوة 2: التفاصيل والصور -->
+              <section class="step-pane stack" data-step="1" hidden>
+                <div class="field">
+                  <label class="label" for="title">عنوان البلاغ<span class="req">*</span></label>
+                  <input class="input" id="title" maxlength="80" placeholder="عنوان مختصر يصف المشكلة">
+                  <p class="hint">مثال: حفرة كبيرة أمام مدرسة الحي</p>
+                  <p class="error-text">اكتب عنواناً مختصراً (5 أحرف على الأقل)</p>
+                </div>
+                <div class="field">
+                  <label class="label" for="desc">وصف المشكلة<span class="req">*</span></label>
+                  <textarea class="textarea" id="desc" rows="5" maxlength="600" placeholder="صف المشكلة بالتفصيل: منذ متى، مدى خطورتها، وأي معلومات تساعد الفريق..."></textarea>
+                  <p class="text-xs c-3 text-end"><span id="desc-count">0</span> / 600</p>
+                  <p class="error-text">يرجى كتابة وصف أوضح (15 حرفاً على الأقل)</p>
+                </div>
+                <div class="field">
+                  <label class="label">صور المشكلة</label>
+                  <div data-upload data-max="5"></div>
+                  <p class="hint">الصور الواضحة تسرّع معالجة البلاغ</p>
+                </div>
+              </section>
+
+              <!-- الخطوة 3: الموقع -->
+              <section class="step-pane stack" data-step="2" hidden>
+                <div class="flex wrap items-center justify-between gap-2">
+                  <div>
+                    <h2 class="fw-600">حدد موقع المشكلة</h2>
+                    <p class="text-sm c-3 mt-1">اضغط على الخريطة أو اسحب الدبوس لتحديد الموقع بدقة.</p>
+                  </div>
+                  <button type="button" class="btn btn-secondary btn-sm" id="locate"><i data-icon="locate-fixed"></i>استخدم موقعي الحالي</button>
+                </div>
+                <div class="field" id="pos-field">
+                  <div class="relative">
+                    <div id="picker" class="h-72" style="height:320px"></div>
+                    <div class="map-hint" id="map-hint"><span>اضغط على الخريطة لوضع الدبوس</span></div>
+                  </div>
+                  <p class="flex items-center gap-1 text-xs c-2" id="coords" hidden><i data-icon="map-pin" class="c-primary"></i>الإحداثيات: <span class="ltr" id="coords-val"></span></p>
+                  <p class="error-text">يرجى تحديد الموقع على الخريطة.</p>
+                </div>
+                <div class="grid sm-cols-2">
+                  <div class="field">
+                    <label class="label" for="district">المنطقة / الحي<span class="req">*</span></label>
+                    <select class="select" id="district"></select>
+                    <p class="error-text">اختر المنطقة</p>
+                  </div>
+                  <div class="field">
+                    <label class="label" for="landmark">أقرب معلم / وصف الموقع</label>
+                    <input class="input" id="landmark" placeholder="مثال: بجانب مسجد الحي">
+                    <p class="hint">اختياري</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- الخطوة 4: المراجعة -->
+              <section class="step-pane stack" data-step="3" hidden>
+                <h2 class="fw-600">راجع بيانات البلاغ قبل الإرسال</h2>
+                <dl class="review" id="review"></dl>
+                <label class="check"><input type="checkbox" checked> أتعهد بصحة المعلومات المقدمة</label>
+                <label class="check"><input type="checkbox" checked> أرغب باستلام إشعارات عبر الرسائل النصية</label>
+              </section>
+            </div>
+
+            <!-- أزرار التنقل (ثابتة أسفل الشاشة على الموبايل) -->
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-ghost" id="prev"><i data-icon="arrow-right"></i>السابق</button>
+              <button type="button" class="btn btn-primary btn-lg" id="next">التالي</button>
+            </div>
+          </div>
+
+          <!-- ملخص جانبي (سطح المكتب) -->
+          <aside class="hidden lg-show stack">
+            <div class="card"><div class="card-body stack-sm">
+              <h3 class="fw-600">ملخص البلاغ</h3>
+              <div class="stack-sm" id="summary"></div>
+            </div></div>
+            <div class="alert alert-info"><i data-icon="info"></i><div>
+              <p class="alert-title">نصائح لبلاغ أسرع</p>
+              <ul class="alert-body"><li>أرفق صورة واضحة من مسافة قريبة وأخرى بعيدة.</li><li>حدد الموقع بدقة على الخريطة.</li><li>بلاغ واحد لكل مشكلة.</li></ul>
+            </div></div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- شاشة النجاح -->
+      <div id="success" class="success-screen" hidden>
+        <span class="result-icon icon-box box-success"><i data-icon="circle-check"></i></span>
+        <h1 class="text-2xl fw-700 mt-6">تم إرسال بلاغك بنجاح</h1>
+        <p class="c-2 mt-2">سيتم مراجعة البلاغ وإحالته للقسم المختص، وستصلك إشعارات بكل تحديث.</p>
+        <div class="card mt-6"><div class="card-body">
+          <p class="text-sm c-3">رقم البلاغ</p>
+          <div class="flex items-center justify-center gap-2 mt-1">
+            <span class="big-number num">BL-2026-01481</span>
+            <button class="icon-btn" id="copy" aria-label="نسخ"><i data-icon="copy"></i></button>
+          </div>
+          <p class="flex items-center justify-center gap-1 text-xs c-3 mt-3"><i data-icon="info"></i> احتفظ بهذا الرقم لمتابعة البلاغ</p>
+        </div></div>
+        <div class="flex col sm-row gap-2 justify-center mt-6">
+          <a class="btn btn-primary" href="complaint.html?id=1480">متابعة البلاغ</a>
+          <a class="btn btn-outline" href="index.html">العودة للوحتي</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../assets/js/maps.js"></script>
+  <script src="../assets/js/pages/new-complaint.js"></script>
+</body>
+</html>

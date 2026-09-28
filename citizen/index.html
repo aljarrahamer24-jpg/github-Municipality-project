@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>لوحتي | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="citizen" data-active="dashboard" data-root="../">
+  <main id="content">
+    <div class="stack-lg">
+      <div class="flex wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-sm c-3">مساء الخير 👋</p>
+          <h1 class="text-2xl fw-700 mt-1">أهلاً، عبدالله</h1>
+          <p class="text-sm c-2 mt-1">هذه نظرة سريعة على بلاغاتك.</p>
+        </div>
+        <a class="btn btn-primary btn-lg hidden sm-inline" href="new.html"><i data-icon="plus"></i>إنشاء بلاغ جديد</a>
+      </div>
+
+      <div class="grid grid-sm cols-2 lg-cols-4" id="stats"></div>
+
+      <div id="rate-alert"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <div><h2 class="card-title">آخر البلاغات</h2><p class="card-sub">حالة كل بلاغ وآخر تحديث عليه</p></div>
+          <a class="link" href="complaints.html">عرض الكل</a>
+        </div>
+        <div class="divider" style="padding:8px" id="latest"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/citizen-dashboard.js"></script>
+</body>
+</html>

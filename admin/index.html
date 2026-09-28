@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>لوحة المدير | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="admin" data-active="dashboard" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-title">لوحة المدير</h1>
+          <p class="page-desc">نظرة شاملة على أداء البلدية في معالجة البلاغات.</p>
+        </div>
+        <div class="page-actions no-print"><select class="select" style="width:160px;height:40px" aria-label="الفترة"><option>آخر 30 يوماً</option><option selected>آخر 6 أشهر</option><option>هذا العام</option></select>
+          <button class="btn btn-outline btn-sm" style="height:40px" data-toast="تم تصدير البيانات (تجريبي)"><i data-icon="download"></i>تصدير</button></div>
+      </div>
+    </div>
+    <div class="stack-lg">
+      <div class="grid grid-sm cols-2 md-cols-3 xxl-cols-6" id="kpis"></div>
+
+      <!-- تنبيهات ذكية -->
+      <div class="grid grid-sm md-cols-2">
+        <a class="banner alert-warning" href="weather.html">
+          <span class="icon-box box-warning" style="--bg:var(--warning-100)"><i data-icon="cloud-rain-wind"></i></span>
+          <span><b>منخفض جوي متوقع 2 — 4 أكتوبر</b><small>3 مناطق عالية الخطورة تحتاج استعداداً مسبقاً</small></span>
+        </a>
+        <a class="banner alert-error" href="recurring.html">
+          <span class="icon-box box-error" style="--bg:var(--error-100)"><i data-icon="repeat"></i></span>
+          <span><b>6 مشاكل متكررة مكتشفة</b><small>2 منها تحتاج صيانة جذرية عاجلة</small></span>
+        </a>
+      </div>
+
+      <div class="grid grid-lg xl-cols-2">
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب الشهر</h2><p class="card-sub">المستلمة مقارنة بالمغلقة — آخر 6 أشهر</p></div></div>
+      <div class="card-body"><div id="chart-month"></div></div>
+    </div>
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب النوع</h2><p class="card-sub">عدد البلاغات لكل نوع مشكلة</p></div></div>
+      <div class="card-body"><div id="chart-category"></div></div>
+    </div>
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب القسم</h2></div></div>
+      <div class="card-body"><div id="chart-department"></div></div>
+    </div>
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب المنطقة</h2></div><a class="link" href="map.html">عرض على الخريطة</a></div>
+      <div class="card-body"><div id="chart-district"></div></div>
+    </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg fw-600">أحدث البلاغات</h2>
+          <a class="link" href="complaints.html">عرض جميع البلاغات</a>
+        </div>
+        <div id="latest"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script src="../assets/js/pages/admin-dashboard.js"></script>
+</body>
+</html>

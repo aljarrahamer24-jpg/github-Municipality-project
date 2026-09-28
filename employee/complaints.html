@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>البلاغات | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="employee" data-active="complaints" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>البلاغات</span></nav>
+    <div class="page-header-row">
+        <div>
+          <h1 class="page-title">البلاغات</h1>
+          <p class="page-desc">ابحث وصفِّ ورتّب البلاغات، واضغط على أي بلاغ لعرض التفاصيل.</p>
+        </div>
+        <div class="page-actions no-print"><button class="btn btn-outline" data-toast="تم تجهيز ملف Excel (تجريبي)"><i data-icon="download"></i>تصدير Excel</button></div>
+      </div>
+    </div>
+    <div id="table"></div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/complaints-list.js"></script>
+</body>
+</html>

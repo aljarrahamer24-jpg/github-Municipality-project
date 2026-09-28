@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>تقييم الخدمة | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="citizen" data-active="complaints" data-root="../">
+  <main id="content">
+    <div style="max-width:576px;margin-inline:auto">
+      <div class="card" id="rate-form">
+        <div class="card-body stack-lg" style="padding:28px">
+          <div class="text-center">
+            <p class="text-xs c-3 num" id="number"></p>
+            <h1 class="text-xl fw-700 mt-1">قيّم الخدمة</h1>
+            <p class="text-sm c-2 mt-1" id="subject"></p>
+          </div>
+          <div class="flex col items-center gap-2">
+            <div id="stars"></div>
+            <p class="rate-label" id="rate-label">اختر من 1 إلى 5 نجوم</p>
+          </div>
+          <div id="tags-wrap" hidden>
+            <p class="text-sm fw-500 mb-3" id="tags-title"></p>
+            <div class="chips" id="tags"></div>
+          </div>
+          <div class="field">
+            <label class="label">تعليق</label>
+            <textarea class="textarea" rows="4" placeholder="شاركنا تفاصيل تجربتك..."></textarea>
+            <p class="hint">اختياري</p>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" id="submit" disabled><i data-icon="send"></i>إرسال التقييم</button>
+        </div>
+      </div>
+
+      <div class="text-center" id="thanks" hidden style="padding-block:40px">
+        <span class="result-icon icon-box box-gold" style="width:80px;height:80px"><i data-icon="heart"></i></span>
+        <h1 class="text-2xl fw-700 mt-6">شكراً لتقييمك!</h1>
+        <p class="c-2 mt-2">رأيك يصل مباشرة إلى إدارة البلدية ويساهم في تحسين الخدمة.</p>
+        <a class="btn btn-primary mt-6" href="index.html">العودة للوحتي</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/rate.js"></script>
+</body>
+</html>

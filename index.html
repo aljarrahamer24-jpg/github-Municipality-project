@@ -1,20 +1,105 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b5d51" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <title>منصة إدارة شكاوى وطلبات خدمات البلدية</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>الرئيسية | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-layout="public" data-active="home" data-root="">
+  <main id="content">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="pattern"></div>
+      <div class="blob" style="top:-128px;inset-inline-end:-128px;width:448px;height:448px;background:rgb(40 145 127 / .3)"></div>
+      <div class="container hero-grid">
+        <div>
+          <span class="hero-pill"><i data-icon="shield-check"></i> المنصة الرسمية لبلدية المدينة</span>
+          <h1>مدينتك أجمل<br><em>بمشاركتك</em></h1>
+          <p class="lead">منصة موحّدة لتقديم الشكاوى وطلبات الخدمات البلدية ومتابعتها بشفافية — من الحفر والإنارة إلى النظافة وتصريف المياه.</p>
+          <div class="hero-actions">
+            <a class="btn btn-accent btn-lg" href="citizen/new.html"><i data-icon="file-text"></i>تقديم بلاغ</a>
+            <a class="btn btn-outline btn-lg btn-glass" href="track.html"><i data-icon="search"></i>متابعة بلاغ</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="flex items-center justify-between">
+            <span class="text-xs c-3 num">BL-2026-01480</span>
+            <span class="badge tone-warning">قيد المعالجة</span>
+          </div>
+          <p class="fw-600 mt-3">حفرة كبيرة في منتصف الشارع</p>
+          <p class="flex items-center gap-1 text-xs c-3 mt-1"><i data-icon="map-pin"></i> حي الجامعة — شارع الجامعة</p>
+          <div class="mt-4">
+            <div class="step"><i><i data-icon="check"></i></i>تم استلام البلاغ</div>
+            <div class="step"><i><i data-icon="check"></i></i>تمت الإحالة إلى قسم الطرق</div>
+            <div class="step"><i class="wait"><i data-icon="clock"></i></i>توجه الفريق الميداني للموقع</div>
+          </div>
+          <div class="hero-float"><span class="stars sm"><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i></span>شكراً لسرعة الاستجابة!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- إحصائيات مختصرة -->
+    <div class="container">
+      <div class="stats-strip">
+        <div><span class="icon-box"><i data-icon="file-text"></i></span><span><b>12,480</b><small>بلاغ تم استلامه</small></span></div>
+        <div><span class="icon-box"><i data-icon="circle-check"></i></span><span><b>91%</b><small>نسبة الإغلاق</small></span></div>
+        <div><span class="icon-box"><i data-icon="timer"></i></span><span><b>3.7 يوم</b><small>متوسط زمن الحل</small></span></div>
+        <div><span class="icon-box"><i data-icon="face-slightly-smiling"></i></span><span><b>4.2 من 5</b><small>رضا المواطنين</small></span></div>
+      </div>
+    </div>
+
+    <!-- أنواع الخدمات البلدية -->
+    <section id="services" class="section scroll-mt">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">الخدمات البلدية</p>
+          <h2>ماذا يمكنك أن تبلّغ عنه؟</h2>
+          <p>اختر نوع المشكلة وسيتم توجيه بلاغك تلقائياً إلى القسم المختص.</p>
+        </div>
+        <div class="services" id="services-grid"><!-- تُملأ من assets/js/pages/home.js --></div>
+      </div>
+    </section>
+
+    <!-- كيف تعمل المنصة -->
+    <section id="how" class="section section-white scroll-mt">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">خطوات بسيطة</p>
+          <h2>كيف تعمل المنصة؟</h2>
+        </div>
+        <ol class="how">
+          <li><span class="num-icon"><i data-icon="file-text"></i><b>1</b></span><h3>قدّم البلاغ</h3><p>اختر نوع المشكلة وأرفق الصور وحدد الموقع على الخريطة.</p></li>
+          <li><span class="num-icon"><i data-icon="bell"></i><b>2</b></span><h3>استلم رقم المتابعة</h3><p>يصلك رقم بلاغ فوري وإشعار بكل تحديث على حالته.</p></li>
+          <li><span class="num-icon"><i data-icon="clock"></i><b>3</b></span><h3>المعالجة الميدانية</h3><p>يُحال البلاغ تلقائياً للقسم المختص ويُتابع حتى الإنجاز.</p></li>
+          <li><span class="num-icon"><i data-icon="star"></i><b>4</b></span><h3>قيّم الخدمة</h3><p>بعد الإغلاق قيّم جودة الخدمة لنستمر في التحسين.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- دعوة لاتخاذ إجراء -->
+    <section class="section">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2>لاحظت مشكلة في حيّك؟</h2>
+            <p>بلاغك يصل مباشرة إلى القسم المختص خلال ثوانٍ.</p>
+          </div>
+          <a class="btn btn-accent btn-lg" href="citizen/new.html">قدّم بلاغك الآن<i data-icon="arrow-left"></i></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/icons.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/pages/home.js"></script>
+</body>
 </html>

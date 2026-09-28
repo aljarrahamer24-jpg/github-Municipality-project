@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>المشاكل المتكررة | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="admin" data-active="recurring" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>المشاكل المتكررة</span></nav>
+    <div class="page-header-row">
+        <div>
+          <h1 class="page-title">المشاكل المتكررة</h1>
+          <p class="page-desc">يكتشف النظام تلقائياً المشاكل التي تتكرر في نفس الموقع (3 بلاغات أو أكثر خلال 6 أشهر ضمن 200 متر).</p>
+        </div>
+        <div class="page-actions no-print"><div class="segmented" id="view"><button class="active" data-view="cards"><i data-icon="layout-grid"></i>بطاقات</button><button data-view="table"><i data-icon="list"></i>جدول</button></div></div>
+      </div>
+    </div>
+    <div class="stack-lg">
+      <div class="grid grid-sm cols-2 lg-cols-4" id="stats"></div>
+      <div class="grid md-cols-2 xl-cols-3" id="cards"></div>
+      <div class="card card-clip" id="table-view" hidden>
+        <div class="table-wrap">
+          <table class="table" style="min-width:760px">
+            <thead><tr><th>المشكلة</th><th>الموقع</th><th>المنطقة</th><th>عدد البلاغات</th><th>الفترة</th><th>الخطورة</th><th>التوصية</th><th></th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/recurring.js"></script>
+</body>
+</html>

@@ -2,44 +2,70 @@
 
 ## 4.1 مكونات UI المشتركة
 
-### أساسية — `src/components/ui/`
-| المكون | الملف | الوصف |
+المشروع مكتوب بـ **HTML + CSS + JavaScript فقط** (بدون Node.js وبدون أي إطار عمل). كل مكوّن له:
+- **تنسيق CSS** في `assets/css/style.css` (قسم "4. المكونات").
+- وعند الحاجة **دالة JavaScript** في `assets/js/ui.js` تُرجع HTML جاهزاً أو تضيف السلوك التفاعلي.
+
+### أساسية
+| المكون | كلاس CSS | دالة JS (ui.js) | الوصف |
+|---|---|---|---|
+| الأزرار | `.btn` + `.btn-primary / -secondary / -outline / -ghost / -accent / -danger` + `.btn-sm / -lg / -block / -icon` | — | 6 أنواع × 3 أحجام |
+| البطاقة | `.card`, `.card-header`, `.card-title`, `.card-sub`, `.card-body`, `.card-footer` | — | حاوية المحتوى الأساسية |
+| الشارات | `.badge` + `.tone-*` | `badge()`, `statusBadge()`, `priorityBadge()`, `overdueBadge()` | الحالات والأولويات |
+| النماذج | `.field`, `.label`, `.input`, `.select`, `.textarea`, `.check`, `.switch`, `.hint`, `.error-text`, `.is-invalid` | `initPasswordToggles()` | الحقول مع التسمية والخطأ والتلميح |
+| بطاقة الإحصائية | `.stat` | `statCard({...})` | رقم + أيقونة + مؤشر اتجاه |
+| رأس الصفحة | `.page-header`, `.breadcrumbs`, `.page-title` | — | مسار التنقل + العنوان + الإجراءات |
+| التبويبات | `.tabs`, `.tab`, `.segmented` | `initTabs()` | قابلة للتمرير على الموبايل |
+| النافذة المنبثقة | `.modal` | `modal({ title, body, footer })` | Bottom sheet على الموبايل |
+| التنبيهات | `.alert` + `.alert-info / -success / -warning / -error` | `alertBox()` | 4 أنواع |
+| إشعار سريع | `.toast` | `toast('نص')` أو `data-toast="نص"` على أي زر | يختفي تلقائياً |
+| حالة فارغة | `.empty` | `empty()` | عند عدم وجود بيانات |
+| صورة رمزية | `.avatar` | `avatar(name)` | الأحرف الأولى |
+| شريط التقدم | `.progress` | `progress(value, tone)` | |
+| النجوم | `.stars` | `stars(value)`, `starInput(el, onChange)` | عرض وإدخال التقييم |
+| رفع الصور | `.upload-zone`, `.previews` | `initUploads()` — يكفي `<div data-upload></div>` | سحب وإفلات + معاينة |
+| الأيقونات | `.icon` | `icon(name)` أو `<i data-icon="name"></i>` | Lucide مضمّنة في `icons.js` |
+
+### خاصة بالبلاغات
+| المكون | دالة JS | الوصف |
 |---|---|---|
-| `Button` | `Button.tsx` | 6 أنواع × 3 أحجام، أيقونات، loading، يعمل كرابط عبر `to` |
-| `Card`, `CardHeader`, `CardBody` | `Card.tsx` | حاوية المحتوى الأساسية |
-| `Badge`, `StatusBadge`, `PriorityBadge`, `OverdueBadge` | `Badge.tsx` | الشارات والحالات |
-| `Field`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch` | `Form.tsx` | عناصر النماذج مع التسمية والخطأ والتلميح |
-| `StatCard` | `StatCard.tsx` | بطاقة إحصائية مع مؤشر اتجاه |
-| `PageHeader` | `PageHeader.tsx` | مسار التنقل + العنوان + الوصف + الإجراءات |
-| `Tabs` | `Misc.tsx` | تبويبات مع عدادات، قابلة للتمرير على الموبايل |
-| `Modal` | `Misc.tsx` | نافذة منبثقة (Bottom sheet على الموبايل) |
-| `Alert` | `Misc.tsx` | 4 أنواع تنبيهات |
-| `EmptyState` | `Misc.tsx` | حالة عدم وجود بيانات |
-| `Avatar` | `Misc.tsx` | صورة رمزية بالأحرف الأولى |
-| `Progress` | `Misc.tsx` | شريط تقدم ملون |
-| `Stars` | `Misc.tsx` | عرض/إدخال التقييم |
-| `Pagination` | `Misc.tsx` | ترقيم الصفحات |
-| `Photo` | `Misc.tsx` | بديل الصور في مرحلة التصميم |
-| `DataTable` | `DataTable.tsx` | جدول إدارة عام: بحث + إضافة/تعديل/حذف + بطاقات موبايل |
+| جدول البلاغات | `createComplaintsTable(el, { data, basePath, pageSize, showFilters, showAssignee, showTabs })` | بحث، تبويبات الحالة، فلاتر، ترتيب، ترقيم، وبطاقات على الموبايل |
+| بطاقة بلاغ | `complaintCard(c, href)` | عرض مختصر للمواطن |
+| Timeline | `timeline(events)` | السجل الزمني لحالات البلاغ |
+| مؤشر المراحل | `stepper(status)` | 5 مراحل مبسطة للمواطن |
+| التعليقات | `comments(list, viewer, allowInternal)` + `bindComposer()` | المحادثة والملاحظات الداخلية |
+| جدول الإدارة (CRUD) | `pages/management.js` | إضافة/تعديل/حذف لـ 6 صفحات بإعداد واحد |
 
-### خاصة بالبلاغات — `src/components/complaints/`
-| المكون | الوصف |
+### الرسوم البيانية — `assets/js/charts.js` (SVG مكتوب يدوياً، بدون مكتبات)
+| الدالة | الاستخدام |
 |---|---|
-| `ComplaintsTable` | جدول البلاغات: بحث، تبويبات الحالة، فلاتر (النوع/المنطقة/الأولوية/الموظف)، ترتيب، ترقيم، بطاقات موبايل |
-| `ComplaintCard` | بطاقة بلاغ مختصرة للمواطن |
-| `Timeline` | السجل الزمني لحالات البلاغ |
-| `StatusStepper` | مؤشر مراحل أفقي مبسط للمواطن |
-| `Comments` | محادثة البلاغ + الملاحظات الداخلية للموظفين |
-| `FileUpload` | رفع الصور بالسحب والإفلات مع معاينة |
+| `Charts.hbar(el, data)` | أعمدة أفقية (النوع / القسم / المنطقة) |
+| `Charts.columns(el, data, { key })` | أعمدة عمودية لسلسلة واحدة |
+| `Charts.area(el, data, series)` | خطوط + مساحة لسلسلتين (المستلمة / المغلقة) |
+| `Charts.line(el, data, { domain })` | خط لسلسلة واحدة (الرضا الشهري) |
 
-### الخرائط والرسوم — `src/components/map/`, `src/components/charts/`
-| المكون | الوصف |
+كلها تدعم Tooltip عند المرور، وتعيد الرسم تلقائياً عند تغير عرض الشاشة، والزمن يتجه من اليمين لليسار.
+
+### الخرائط — `assets/js/maps.js` (مكتبة Leaflet محلياً في `assets/vendor/leaflet`)
+| الدالة | الاستخدام |
 |---|---|
-| `LocationPicker` | اختيار الموقع بالنقر/السحب + "موقعي الحالي" |
-| `LocationMap` | عرض موقع بلاغ واحد |
-| `ComplaintsMap` | Markers ملونة حسب الحالة + طبقة Heatmap |
-| `RiskMap` | دوائر خطورة المناطق (الطقس) |
-| `HBarChart`, `ColumnChart`, `TrendChart`, `SimpleLine` | رسوم Recharts مهيأة للعربية (المحور على اليمين والزمن يتجه من اليمين لليسار) |
+| `Maps.location(el, lat, lng)` | عرض موقع بلاغ واحد |
+| `Maps.picker(el, onPick)` | اختيار الموقع بالنقر أو سحب الدبوس |
+| `Maps.complaints(el, data, onSelect)` | نقاط ملونة حسب الحالة + طبقة حرارية |
+| `Maps.risk(el, areas)` | دوائر خطورة المناطق (الطقس) |
+
+### كيف يُبنى التخطيط؟
+كل صفحة HTML تحتوي فقط على محتواها داخل `<main id="content">`، وتحدد نوعها في `<body>`:
+
+```html
+<body data-layout="admin" data-active="reports" data-root="../">
+```
+
+- `data-layout`: نوع الواجهة (`public` / `auth` / `citizen` / `employee` / `admin`).
+- `data-active`: عنصر القائمة المميز.
+- `data-root`: المسار إلى جذر المشروع (`""` أو `"../"`).
+
+عند التحميل يبني `ui.js` الهيدر والقائمة الجانبية والفوتر حول المحتوى تلقائياً، حتى لا تتكرر نفس القوائم في كل ملف.
 
 ## 4.2 التخطيطات (Layouts)
 
@@ -101,7 +127,7 @@
 
 ## 4.3 السلوك المتجاوب (Responsive — Mobile First)
 
-نقاط التوقف (Tailwind): `sm` 640px · `md` 768px · `lg` 1024px · `xl` 1280px · `2xl` 1536px
+نقاط التوقف (Media Queries في style.css): `sm` 640px · `md` 768px · `lg` 1024px · `xl` 1280px · `2xl` 1536px
 
 | العنصر | موبايل (< 768) | تابلت (768–1023) | سطح المكتب (≥ 1024) |
 |---|---|---|---|

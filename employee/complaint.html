@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>تفاصيل البلاغ | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="employee" data-active="complaints" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><a href="complaints.html">البلاغات</a><i data-icon="chevron-left"></i><span id="crumb"></span></nav>
+      <div class="page-header-row">
+        <div><h1 class="page-title" id="title"></h1><p class="page-desc" id="subtitle"></p></div>
+        <div class="page-actions no-print"><button class="btn btn-outline" data-print><i data-icon="printer"></i>طباعة</button></div>
+      </div>
+    </div>
+
+    <!-- على الموبايل: الإجراءات أولاً — على سطح المكتب: عمودان -->
+    <div class="grid grid-lg staff-grid">
+      <div class="card s-actions">
+        <div class="card-header"><h2 class="card-title">إجراءات البلاغ</h2></div>
+        <div class="card-body stack">
+          <div id="saved" hidden><div class="alert alert-success"><i data-icon="circle-check"></i><div><p class="alert-title">تم حفظ التحديث</p><p class="alert-body">سيتم إشعار المواطن بالحالة الجديدة.</p></div></div></div>
+          <div class="field"><label class="label" for="status">تغيير الحالة</label><select class="select" id="status"></select></div>
+          <div class="grid cols-2 grid-sm">
+            <div class="field"><label class="label" for="priority">الأولوية</label><select class="select" id="priority"></select></div>
+            <div class="field"><label class="label" for="department">القسم</label><select class="select" id="department"></select></div>
+          </div>
+          <div class="field"><label class="label" for="assignee">الموظف المسؤول</label><select class="select" id="assignee"></select></div>
+          <div class="field"><label class="label">ملاحظة التحديث</label><textarea class="textarea" rows="3" style="min-height:80px" placeholder="مثال: تم إرسال الفريق الميداني..."></textarea><p class="hint">تظهر للمواطن ضمن سجل الحالات</p></div>
+          <div class="field" id="after-upload" hidden><label class="label">صور بعد المعالجة<span class="req">*</span></label><div data-upload data-compact data-label="ارفع صور الإنجاز"></div></div>
+          <button class="btn btn-primary btn-block" id="save"><i data-icon="save"></i>حفظ التحديث</button>
+        </div>
+      </div>
+
+      <div class="stack-lg s-main" style="min-width:0">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">بيانات البلاغ</h2></div>
+          <div class="card-body stack-lg">
+            <div class="info-list sm-cols-2 grid" id="info"></div>
+            <div><p class="text-sm fw-600 mb-3">الوصف</p><p class="text-sm c-2 leading-loose" style="padding:12px;border-radius:10px;background:var(--canvas)" id="description"></p></div>
+          </div>
+        </div>
+
+        <div class="card" data-tabs-scope>
+          <div class="card-header">
+            <h2 class="card-title">الصور</h2>
+            <div class="tabs" data-tabs>
+              <button class="tab active" data-tab="before">قبل<span class="count" id="count-before"></span></button>
+              <button class="tab" data-tab="after">بعد المعالجة<span class="count" id="count-after"></span></button>
+            </div>
+          </div>
+          <div class="card-body"><div data-pane="before" id="pane-before"></div><div data-pane="after" id="pane-after" hidden></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">الموقع على الخريطة</h2><p class="card-sub" id="address"></p></div><a class="link" id="gmaps" target="_blank" rel="noreferrer">فتح في خرائط Google</a></div>
+          <div class="card-body"><div id="map" class="h-72"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">التعليقات والملاحظات الداخلية</h2><p class="card-sub">الملاحظات الداخلية لا تظهر للمواطن</p></div></div>
+          <div class="card-body" id="comments"></div>
+        </div>
+      </div>
+
+      <div class="stack-lg s-side">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">مقدم البلاغ</h2></div>
+          <div class="card-body stack-sm text-sm" id="citizen"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">Timeline — سجل الحالات</h2></div>
+          <div class="card-body" id="timeline"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../assets/js/maps.js"></script>
+  <script src="../assets/js/pages/staff-complaint.js"></script>
+</body>
+</html>

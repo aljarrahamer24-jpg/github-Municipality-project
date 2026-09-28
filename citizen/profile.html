@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>حسابي | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="citizen" data-active="profile" data-root="../">
+  <main id="content">
+    <div class="container-sm stack-lg" style="margin-inline:auto;padding:0">
+    <div class="page-header">
+      <div class="page-header-row">
+        <div>
+          <h1 class="page-title">حسابي</h1>
+          <p class="page-desc">إدارة بياناتك الشخصية وتفضيلات الإشعارات.</p>
+        </div>
+      </div>
+    </div>
+      <div class="card"><div class="card-body flex items-center gap-4">
+        <span class="avatar lg">ع م</span>
+        <div><p class="text-lg fw-600">عبدالله محمود</p><p class="text-sm c-3">عضو منذ يناير 2026 · 7 بلاغات</p></div>
+      </div></div>
+
+      <div class="card">
+        <div class="card-header"><h2 class="card-title">البيانات الشخصية</h2></div>
+        <div class="card-body grid sm-cols-2">
+          <div class="field"><label class="label">الاسم الكامل</label><div class="input-wrap"><i data-icon="user"></i><input class="input" value="عبدالله محمود"></div></div>
+          <div class="field"><label class="label">رقم الهاتف</label><div class="input-wrap"><i data-icon="phone"></i><input class="input" value="0790000001" dir="ltr"></div></div>
+          <div class="field"><label class="label">البريد الإلكتروني</label><div class="input-wrap"><i data-icon="mail"></i><input class="input" value="abdullah@example.com"></div></div>
+          <div class="field"><label class="label">منطقة السكن</label>
+            <select class="select"><option>وسط البلد</option><option>حي النزهة</option><option>حي الروضة</option><option>حي الياسمين</option><option selected>حي الجامعة</option><option>الحي الشرقي</option><option>حي الورود</option><option>المنطقة الصناعية</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2 class="card-title">تفضيلات الإشعارات</h2></div>
+        <div class="card-body stack">
+          <label class="switch"><input type="checkbox" checked><span class="track"></span>إشعارات الرسائل النصية</label>
+          <label class="switch"><input type="checkbox" checked><span class="track"></span>إشعارات البريد الإلكتروني</label>
+          <label class="switch"><input type="checkbox" checked><span class="track"></span>التنبيهات الجوية لمنطقتي</label>
+        </div>
+      </div>
+
+      <div class="flex justify-end"><button class="btn btn-primary" data-toast="تم حفظ التغييرات"><i data-icon="save"></i>حفظ التغييرات</button></div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+</body>
+</html>

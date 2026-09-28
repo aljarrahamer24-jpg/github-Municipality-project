@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>إعدادات النظام | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="admin" data-active="settings" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>إعدادات النظام</span></nav>
+    <div class="page-header-row">
+        <div>
+          <h1 class="page-title">إعدادات النظام</h1>
+          <p class="page-desc">تحكم في الإعدادات العامة وقواعد العمل للمنصة.</p>
+        </div>
+        <div class="page-actions no-print"><button class="btn btn-primary" data-toast="تم حفظ الإعدادات"><i data-icon="save"></i>حفظ الإعدادات</button></div>
+      </div>
+    </div>
+    <div class="grid grid-lg layout-settings">
+      <nav class="settings-nav">
+        <a href="#general" class="active"><i data-icon="building"></i>الإعدادات العامة</a>
+        <a href="#complaints-rules"><i data-icon="timer"></i>البلاغات و SLA</a>
+        <a href="#notify"><i data-icon="bell"></i>الإشعارات</a>
+        <a href="#smart"><i data-icon="sparkles"></i>التحليل الذكي</a>
+        <a href="#security"><i data-icon="shield-check"></i>الأمان</a>
+      </nav>
+
+      <div class="stack-lg">
+        <section class="card scroll-mt" id="general">
+          <div class="card-header"><h2 class="card-title">الإعدادات العامة</h2></div>
+          <div class="card-body grid sm-cols-2">
+            <div class="field"><label class="label">اسم البلدية</label><input class="input" value="بلدية المدينة" ></div>
+            <div class="field"><label class="label">اسم المنصة</label><input class="input" value="منصة إدارة شكاوى وطلبات خدمات البلدية" ></div>
+            <div class="field"><label class="label">رقم الطوارئ</label><input class="input" value="1800-000-000" dir="ltr"></div>
+            <div class="field"><label class="label">البريد الرسمي</label><input class="input" value="info@municipality.example" ></div>
+            <div class="field"><label class="label">اللغة الافتراضية</label><select class="select"><option>العربية</option><option>English</option></select></div>
+            <div class="field"><label class="label">المنطقة الزمنية</label><select class="select"><option>Asia/Amman (GMT+3)</option></select></div>
+            <div class="field span-full"><label class="label">نص الترحيب في الصفحة الرئيسية</label><textarea class="textarea" rows="3">منصة موحّدة لتقديم الشكاوى وطلبات الخدمات البلدية ومتابعتها بشفافية.</textarea></div>
+          </div>
+        </section>
+
+        <section class="card scroll-mt" id="complaints-rules">
+          <div class="card-header"><h2 class="card-title">البلاغات و SLA</h2></div>
+          <div class="card-body stack">
+            <div class="grid sm-cols-3">
+              <div class="field"><label class="label">الحد الأقصى للصور</label><input class="input" value="5" type="number"></div>
+              <div class="field"><label class="label">حجم الصورة الأقصى (MB)</label><input class="input" value="5" type="number"></div>
+              <div class="field"><label class="label">الإغلاق التلقائي بعد (أيام)</label><input class="input" value="3" type="number"><p class=hint>بعد تغيير الحالة إلى تم الحل</p></div>
+            </div>
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>الإحالة التلقائية للقسم المختص حسب نوع المشكلة</label>
+            <label class="switch"><input type="checkbox" ><span class="track"></span>السماح بالبلاغات دون تسجيل دخول</label>
+          </div>
+        </section>
+
+        <section class="card scroll-mt" id="notify">
+          <div class="card-header"><h2 class="card-title">الإشعارات</h2></div>
+          <div class="card-body stack col" style="align-items:flex-start">
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>الرسائل النصية SMS</label>
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>البريد الإلكتروني</label>
+            <label class="switch"><input type="checkbox" ><span class="track"></span>إشعارات المتصفح</label>
+          </div>
+        </section>
+
+        <section class="card scroll-mt" id="smart">
+          <div class="card-header"><h2 class="card-title">التحليل الذكي</h2></div>
+          <div class="card-body stack">
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>اكتشاف المشاكل المتكررة تلقائياً</label>
+            <div class="grid sm-cols-3">
+              <div class="field"><label class="label">عدد البلاغات الأدنى</label><input class="input" value="3" type="number"></div>
+              <div class="field"><label class="label">نطاق المسافة (متر)</label><input class="input" value="200" type="number"></div>
+              <div class="field"><label class="label">الفترة (أشهر)</label><input class="input" value="6" type="number"></div>
+            </div>
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>التنبيه الاستباقي للحالات الجوية</label>
+          </div>
+        </section>
+
+        <section class="card scroll-mt" id="security">
+          <div class="card-header"><h2 class="card-title">الأمان</h2></div>
+          <div class="card-body stack">
+            <label class="switch"><input type="checkbox" checked><span class="track"></span>التحقق بخطوتين للموظفين والمدراء</label>
+            <div style="max-width:240px"><div class="field"><label class="label">انتهاء الجلسة بعد (دقيقة)</label><input class="input" value="30" type="number"></div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/settings.js"></script>
+</body>
+</html>

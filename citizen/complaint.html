@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>تفاصيل البلاغ | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="citizen" data-active="complaints" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs"><a href="index.html">لوحتي</a><i data-icon="chevron-left"></i><a href="complaints.html">بلاغاتي</a><i data-icon="chevron-left"></i><span id="crumb"></span></nav>
+      <h1 class="page-title" id="title"></h1>
+      <p class="page-desc num" id="number"></p>
+    </div>
+
+    <div class="grid grid-lg layout-aside">
+      <div class="stack-lg" style="min-width:0">
+        <div class="card"><div class="card-body" id="stepper"></div></div>
+
+        <div class="card" id="rating-card" hidden style="border-color:var(--secondary-200);background:var(--secondary-50)">
+          <div class="card-body flex col sm-row gap-4" style="justify-content:space-between"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">وصف المشكلة</h2></div>
+          <div class="card-body stack-lg">
+            <p class="c-2 leading-loose" id="description"></p>
+            <div>
+              <p class="text-sm fw-600 mb-3">الصور المرفقة</p>
+              <div class="photos" id="photos"></div>
+            </div>
+            <div id="after-wrap" hidden>
+              <p class="text-sm fw-600 mb-3">صور بعد المعالجة</p>
+              <div class="photos" id="after"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">الموقع</h2><p class="card-sub" id="address"></p></div></div>
+          <div class="card-body"><div id="map" class="h-64"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">التعليقات والتحديثات</h2><p class="card-sub">تواصل مع الفريق المسؤول عن البلاغ</p></div></div>
+          <div class="card-body" id="comments"></div>
+        </div>
+      </div>
+
+      <aside class="stack-lg">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">بيانات البلاغ</h2></div>
+          <div class="card-body info-list" id="info"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">سجل الحالات</h2></div>
+          <div class="card-body" id="timeline"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../assets/js/maps.js"></script>
+  <script src="../assets/js/pages/citizen-complaint.js"></script>
+</body>
+</html>

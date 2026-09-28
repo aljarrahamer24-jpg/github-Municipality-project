@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>إنشاء حساب | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="auth" data-active="" data-root="../">
+  <main id="content">
+    <h1>إنشاء حساب جديد</h1>
+    <p class="lead">أنشئ حسابك كمواطن لتقديم البلاغات ومتابعتها.</p>
+    <form id="register-form" class="stack mt-6" novalidate>
+      <div class="field" data-required>
+        <label class="label">الاسم الكامل<span class="req">*</span></label>
+        <div class="input-wrap"><i data-icon="user"></i><input class="input" placeholder="الاسم الرباعي"></div>
+        <p class="error-text">يرجى إدخال الاسم الكامل</p>
+      </div>
+      <div class="grid sm-cols-2">
+        <div class="field" data-required>
+          <label class="label">رقم الهاتف<span class="req">*</span></label>
+          <div class="input-wrap"><i data-icon="phone"></i><input class="input" placeholder="07XXXXXXXX" dir="ltr"></div>
+          <p class="error-text">رقم الهاتف مطلوب</p>
+        </div>
+        <div class="field">
+          <label class="label">الرقم الوطني</label>
+          <div class="input-wrap"><i data-icon="credit-card"></i><input class="input" placeholder="0000000000" dir="ltr"></div>
+          <p class="hint">اختياري</p>
+        </div>
+      </div>
+      <div class="field" data-required>
+        <label class="label">البريد الإلكتروني<span class="req">*</span></label>
+        <div class="input-wrap"><i data-icon="mail"></i><input class="input" type="email" placeholder="name@example.com"></div>
+        <p class="error-text">البريد الإلكتروني مطلوب</p>
+      </div>
+      <div class="field">
+        <label class="label">منطقة السكن</label>
+        <select class="select">
+          <option value="" disabled selected>اختر المنطقة</option>
+          <option>وسط البلد</option><option>حي النزهة</option><option>حي الروضة</option><option>حي الياسمين</option>
+          <option>حي الجامعة</option><option>الحي الشرقي</option><option>حي الورود</option><option>المنطقة الصناعية</option>
+        </select>
+      </div>
+      <div class="grid sm-cols-2">
+        <div class="field" data-required>
+          <label class="label">كلمة المرور<span class="req">*</span></label>
+          <div class="input-wrap"><i data-icon="lock"></i><input class="input" type="password" placeholder="••••••••"></div>
+          <p class="hint">8 أحرف على الأقل</p>
+          <p class="error-text">كلمة المرور مطلوبة</p>
+        </div>
+        <div class="field">
+          <label class="label">تأكيد كلمة المرور<span class="req">*</span></label>
+          <div class="input-wrap"><i data-icon="lock"></i><input class="input" type="password" placeholder="••••••••"></div>
+          <p class="error-text">كلمتا المرور غير متطابقتين</p>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" required> أوافق على <a class="link" href="#">شروط الاستخدام</a> وسياسة الخصوصية</label>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">إنشاء الحساب</button>
+    </form>
+    <p class="text-center text-sm c-2 mt-6">لديك حساب بالفعل؟ <a class="link fw-600" href="login.html">تسجيل الدخول</a></p>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/pages/auth.js"></script>
+</body>
+</html>

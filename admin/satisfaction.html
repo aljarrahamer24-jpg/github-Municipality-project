@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5d51">
+  <meta name="description" content="منصة إدارة شكاوى وطلبات خدمات البلدية">
+  <title>رضا المواطنين | منصة شكاوى البلدية</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body data-layout="admin" data-active="satisfaction" data-root="../">
+  <main id="content">
+    <div class="page-header">
+      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>رضا المواطنين</span></nav>
+    <div class="page-header-row">
+        <div>
+          <h1 class="page-title">رضا المواطنين</h1>
+          <p class="page-desc">تحليل تقييمات المواطنين بعد إغلاق البلاغات وتحليل التعليقات بالكلمات المفتاحية.</p>
+        </div>
+        <div class="page-actions no-print"><select class="select" style="width:160px;height:40px"><option>آخر 6 أشهر</option><option>هذا العام</option></select></div>
+      </div>
+    </div>
+    <div class="stack-lg">
+      <div class="grid grid-sm cols-2 lg-cols-4" id="stats"></div>
+
+      <div class="grid grid-lg layout-aside-start">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title">توزيع النجوم</h2></div>
+          <div class="card-body stack-lg">
+            <div class="flex items-center gap-4">
+              <p style="font-size:48px;font-weight:700;line-height:1" id="avg"></p>
+              <div><div id="avg-stars"></div><p class="text-xs c-3 mt-1">بناءً على <span id="total"></span> تقييماً</p></div>
+            </div>
+            <div id="dist"></div>
+          </div>
+        </div>
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">مقارنة الأشهر</h2><p class="card-sub">متوسط التقييم الشهري (من 5)</p></div></div>
+      <div class="card-body"><div id="chart-months"></div></div>
+    </div>
+      </div>
+
+      <div class="grid grid-lg lg-cols-2">
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">مقارنة الأقسام</h2><p class="card-sub">متوسط تقييم كل قسم (من 5)</p></div></div>
+      <div class="card-body"><div id="chart-depts"></div></div>
+    </div>
+        <div class="card">
+      <div class="card-header"><div><h2 class="card-title">أكثر أسباب عدم الرضا</h2><p class="card-sub">مستخرجة من التعليقات عبر الكلمات المفتاحية</p></div><a class="link" href="keywords.html">إدارة الكلمات</a></div>
+      <div class="card-body"><div id="reasons"></div></div>
+    </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h2 class="card-title">أحدث التعليقات</h2></div>
+        <div class="feedback-grid" id="feedback"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/icons.js"></script>
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/charts.js"></script>
+  <script src="../assets/js/pages/satisfaction.js"></script>
+</body>
+</html>
