@@ -30,7 +30,10 @@ const Notifications = {
         toast(payload.new.title + (payload.new.body ? ' — ' + payload.new.body : ''), 'info')
         document.dispatchEvent(new CustomEvent('notification', { detail: payload.new }))
       })
-      .subscribe()
+      .subscribe((status) => {
+        // تفعيل الاشتراك يستغرق لحظات بعد فتح الصفحة؛ نعيد قراءة العدّاد حتى لا يضيع إشعار وصل خلالها
+        if (status === 'SUBSCRIBED') API.unreadCount().then((n) => this.setUnread(n)).catch(() => {})
+      })
   },
 
   setUnread(n) {
