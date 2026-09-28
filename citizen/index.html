@@ -17,8 +17,8 @@
     <div class="stack-lg">
       <div class="flex wrap items-end justify-between gap-4">
         <div>
-          <p class="text-sm c-3">مساء الخير 👋</p>
-          <h1 class="text-2xl fw-700 mt-1">أهلاً، عبدالله</h1>
+          <p class="text-sm c-3" id="greeting">مرحباً 👋</p>
+          <h1 class="text-2xl fw-700 mt-1">أهلاً، <span id="first-name"></span></h1>
           <p class="text-sm c-2 mt-1">هذه نظرة سريعة على بلاغاتك.</p>
         </div>
         <a class="btn btn-primary btn-lg hidden sm-inline" href="new.html"><i data-icon="plus"></i>إنشاء بلاغ جديد</a>
@@ -38,9 +38,16 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/citizen-dashboard.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/citizen/dashboard.js"></script>
 </body>
 </html>

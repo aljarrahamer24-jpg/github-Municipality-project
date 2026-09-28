@@ -18,7 +18,7 @@
       <div class="page-header-row">
         <div>
           <h1 class="page-title">لوحة تحكم الموظف</h1>
-          <p class="page-desc">الأحد، 28 سبتمبر 2026 — لديك 5 بلاغات جديدة بانتظار المراجعة.</p>
+          <p class="page-desc" id="today-desc"></p>
         </div>
       </div>
     </div>
@@ -27,9 +27,17 @@
     <div id="table"></div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/employee-dashboard.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/core/complaints-table.js"></script>
+  <script src="../assets/js/employee/dashboard.js"></script>
 </body>
 </html>

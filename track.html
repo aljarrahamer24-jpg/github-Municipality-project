@@ -24,7 +24,7 @@
         <form class="card-body flex col sm-row gap-3" id="track-form" style="align-items:stretch">
           <div class="field flex-1">
             <label class="label" for="track-number">رقم البلاغ</label>
-            <div class="input-wrap"><i data-icon="hash"></i><input class="input" id="track-number" value="BL-2026-01480" placeholder="BL-2026-00000" dir="ltr"></div>
+            <div class="input-wrap"><i data-icon="hash"></i><input class="input" id="track-number" placeholder="BLD-2026-000001" dir="ltr"></div>
           </div>
           <button class="btn btn-primary" type="submit" style="align-self:flex-end"><i data-icon="search"></i>بحث</button>
         </form>
@@ -33,9 +33,16 @@
     </div>
   </main>
 
-  <script src="assets/js/icons.js"></script>
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/pages/track.js"></script>
+  <script src="assets/vendor/supabase/supabase.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/core/icons.js"></script>
+  <script src="assets/js/core/utils.js"></script>
+  <script src="assets/js/core/supabase.js"></script>
+  <script src="assets/js/core/ui.js"></script>
+  <script src="assets/js/core/api.js"></script>
+  <script src="assets/js/core/notifications.js"></script>
+  <script src="assets/js/core/layout.js"></script>
+  <script src="assets/js/core/app.js"></script>
+  <script src="assets/js/public/track.js"></script>
 </body>
 </html>

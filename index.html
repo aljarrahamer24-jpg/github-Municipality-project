@@ -30,7 +30,7 @@
         </div>
         <div class="hero-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs c-3 num">BL-2026-01480</span>
+            <span class="text-xs c-3 num">مثال: BLD-2026-000123</span>
             <span class="badge tone-warning">قيد المعالجة</span>
           </div>
           <p class="fw-600 mt-3">حفرة كبيرة في منتصف الشارع</p>
@@ -48,10 +48,10 @@
     <!-- إحصائيات مختصرة -->
     <div class="container">
       <div class="stats-strip">
-        <div><span class="icon-box"><i data-icon="file-text"></i></span><span><b>12,480</b><small>بلاغ تم استلامه</small></span></div>
-        <div><span class="icon-box"><i data-icon="circle-check"></i></span><span><b>91%</b><small>نسبة الإغلاق</small></span></div>
-        <div><span class="icon-box"><i data-icon="timer"></i></span><span><b>3.7 يوم</b><small>متوسط زمن الحل</small></span></div>
-        <div><span class="icon-box"><i data-icon="face-slightly-smiling"></i></span><span><b>4.2 من 5</b><small>رضا المواطنين</small></span></div>
+        <div><span class="icon-box"><i data-icon="file-text"></i></span><span><b data-stat="total">—</b><small>بلاغ تم استلامه</small></span></div>
+        <div><span class="icon-box"><i data-icon="circle-check"></i></span><span><b data-stat="closed_rate">—</b><small>نسبة الإغلاق</small></span></div>
+        <div><span class="icon-box"><i data-icon="timer"></i></span><span><b data-stat="avg_days">—</b><small>متوسط زمن الحل</small></span></div>
+        <div><span class="icon-box"><i data-icon="face-slightly-smiling"></i></span><span><b data-stat="avg_rating">—</b><small>رضا المواطنين</small></span></div>
       </div>
     </div>
 
@@ -97,9 +97,16 @@
     </section>
   </main>
 
-  <script src="assets/js/icons.js"></script>
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/pages/home.js"></script>
+  <script src="assets/vendor/supabase/supabase.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/core/icons.js"></script>
+  <script src="assets/js/core/utils.js"></script>
+  <script src="assets/js/core/supabase.js"></script>
+  <script src="assets/js/core/ui.js"></script>
+  <script src="assets/js/core/api.js"></script>
+  <script src="assets/js/core/notifications.js"></script>
+  <script src="assets/js/core/layout.js"></script>
+  <script src="assets/js/core/app.js"></script>
+  <script src="assets/js/public/home.js"></script>
 </body>
 </html>

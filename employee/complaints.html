@@ -21,15 +21,23 @@
           <h1 class="page-title">البلاغات</h1>
           <p class="page-desc">ابحث وصفِّ ورتّب البلاغات، واضغط على أي بلاغ لعرض التفاصيل.</p>
         </div>
-        <div class="page-actions no-print"><button class="btn btn-outline" data-toast="تم تجهيز ملف Excel (تجريبي)"><i data-icon="download"></i>تصدير Excel</button></div>
+        <div class="page-actions no-print"><button class="btn btn-outline" id="export-csv"><i data-icon="download"></i>تصدير Excel (CSV)</button></div>
       </div>
     </div>
     <div id="table"></div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/complaints-list.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/core/complaints-table.js"></script>
+  <script src="../assets/js/staff/complaints.js"></script>
 </body>
 </html>

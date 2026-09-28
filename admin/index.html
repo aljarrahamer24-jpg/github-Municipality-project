@@ -20,32 +20,32 @@
           <h1 class="page-title">لوحة المدير</h1>
           <p class="page-desc">نظرة شاملة على أداء البلدية في معالجة البلاغات.</p>
         </div>
-        <div class="page-actions no-print"><select class="select" style="width:160px;height:40px" aria-label="الفترة"><option>آخر 30 يوماً</option><option selected>آخر 6 أشهر</option><option>هذا العام</option></select>
-          <button class="btn btn-outline btn-sm" style="height:40px" data-toast="تم تصدير البيانات (تجريبي)"><i data-icon="download"></i>تصدير</button></div>
+        <div class="page-actions no-print"><select class="select" id="period" style="width:160px;height:40px" aria-label="الفترة"><option value="30">آخر 30 يوماً</option><option value="180" selected>آخر 6 أشهر</option><option value="year">هذا العام</option><option value="">كل الفترات</option></select>
+          <a class="btn btn-outline btn-sm" style="height:40px" href="reports.html"><i data-icon="file-chart-column"></i>التقارير</a></div>
       </div>
     </div>
     <div class="stack-lg">
-      <div class="grid grid-sm cols-2 md-cols-3 xxl-cols-6" id="kpis"></div>
+      <div class="grid grid-sm cols-2 md-cols-4" id="kpis"></div>
 
-      <!-- تنبيهات ذكية -->
+      <!-- تنبيهات (قواعد منطقية من قاعدة البيانات) -->
       <div class="grid grid-sm md-cols-2">
-        <a class="banner alert-warning" href="weather.html">
+        <a class="banner alert-warning" href="weather.html" id="weather-banner" hidden>
           <span class="icon-box box-warning" style="--bg:var(--warning-100)"><i data-icon="cloud-rain-wind"></i></span>
-          <span><b>منخفض جوي متوقع 2 — 4 أكتوبر</b><small>3 مناطق عالية الخطورة تحتاج استعداداً مسبقاً</small></span>
+          <span><b data-t></b><small data-s></small></span>
         </a>
-        <a class="banner alert-error" href="recurring.html">
+        <a class="banner alert-error" href="recurring.html" id="recurring-banner" hidden>
           <span class="icon-box box-error" style="--bg:var(--error-100)"><i data-icon="repeat"></i></span>
-          <span><b>6 مشاكل متكررة مكتشفة</b><small>2 منها تحتاج صيانة جذرية عاجلة</small></span>
+          <span><b data-t></b><small data-s></small></span>
         </a>
       </div>
 
       <div class="grid grid-lg xl-cols-2">
         <div class="card">
-      <div class="card-header"><div><h2 class="card-title">البلاغات حسب الشهر</h2><p class="card-sub">المستلمة مقارنة بالمغلقة — آخر 6 أشهر</p></div></div>
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب الشهر</h2><p class="card-sub" id="trend-sub">المستلمة مقارنة بالمغلقة — آخر 6 أشهر</p></div></div>
       <div class="card-body"><div id="chart-month"></div></div>
     </div>
         <div class="card">
-      <div class="card-header"><div><h2 class="card-title">البلاغات حسب النوع</h2><p class="card-sub">عدد البلاغات لكل نوع مشكلة</p></div></div>
+      <div class="card-header"><div><h2 class="card-title">البلاغات حسب النوع</h2><p class="card-sub">عدد البلاغات لكل نوع مشكلة خلال الفترة المحددة</p></div></div>
       <div class="card-body"><div id="chart-category"></div></div>
     </div>
         <div class="card">
@@ -68,10 +68,18 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/charts.js"></script>
-  <script src="../assets/js/pages/admin-dashboard.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/core/charts.js"></script>
+  <script src="../assets/js/core/complaints-table.js"></script>
+  <script src="../assets/js/admin/dashboard.js"></script>
 </body>
 </html>

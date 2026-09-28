@@ -29,7 +29,7 @@
       <div class="card"><div class="card-body grid sm-cols-2 lg-cols-5" id="filters" style="align-items:end">
         <div class="field"><label class="label" for="f-cat">نوع المشكلة</label><select class="select" id="f-cat" data-f="cat"></select></div>
         <div class="field"><label class="label" for="f-period">الفترة الزمنية</label>
-          <select class="select" id="f-period" data-f="period"><option value="7">آخر 7 أيام</option><option value="30">آخر 30 يوماً</option><option value="90">آخر 3 أشهر</option><option value="120" selected>آخر 4 أشهر</option></select></div>
+          <select class="select" id="f-period" data-f="period"><option value="7">آخر 7 أيام</option><option value="30">آخر 30 يوماً</option><option value="90">آخر 3 أشهر</option><option value="180" selected>آخر 6 أشهر</option><option value="365">آخر سنة</option><option value="">كل الفترات</option></select></div>
         <div class="field"><label class="label" for="f-dist">المنطقة</label><select class="select" id="f-dist" data-f="dist"></select></div>
         <div class="field"><label class="label" for="f-status">الحالة</label><select class="select" id="f-status" data-f="status"></select></div>
         <div class="segmented" id="modes" role="group" aria-label="طريقة العرض">
@@ -61,11 +61,18 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
   <script src="../assets/vendor/leaflet/leaflet.js"></script>
-  <script src="../assets/js/maps.js"></script>
-  <script src="../assets/js/pages/complaints-map.js"></script>
+  <script src="../assets/js/core/maps.js"></script>
+  <script src="../assets/js/staff/map.js"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@
           </div>
           <div class="field">
             <label class="label">تعليق</label>
-            <textarea class="textarea" rows="4" placeholder="شاركنا تفاصيل تجربتك..."></textarea>
+            <textarea class="textarea" id="comment" rows="4" maxlength="1000" placeholder="شاركنا تفاصيل تجربتك..."></textarea>
             <p class="hint">اختياري</p>
           </div>
           <button class="btn btn-primary btn-lg btn-block" id="submit" disabled><i data-icon="send"></i>إرسال التقييم</button>
@@ -48,9 +48,16 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/rate.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/citizen/rate.js"></script>
 </body>
 </html>

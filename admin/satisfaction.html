@@ -21,7 +21,7 @@
           <h1 class="page-title">رضا المواطنين</h1>
           <p class="page-desc">تحليل تقييمات المواطنين بعد إغلاق البلاغات وتحليل التعليقات بالكلمات المفتاحية.</p>
         </div>
-        <div class="page-actions no-print"><select class="select" style="width:160px;height:40px"><option>آخر 6 أشهر</option><option>هذا العام</option></select></div>
+        <div class="page-actions no-print"><select class="select" id="period" style="width:160px;height:40px" aria-label="الفترة"><option value="90">آخر 3 أشهر</option><option value="180" selected>آخر 6 أشهر</option><option value="365">آخر سنة</option><option value="">كل الفترات</option></select></div>
       </div>
     </div>
     <div class="stack-lg">
@@ -51,7 +51,7 @@
     </div>
         <div class="card">
       <div class="card-header"><div><h2 class="card-title">أكثر أسباب عدم الرضا</h2><p class="card-sub">مستخرجة من التعليقات عبر الكلمات المفتاحية</p></div><a class="link" href="keywords.html">إدارة الكلمات</a></div>
-      <div class="card-body"><div id="reasons"></div></div>
+      <div class="card-body"><div id="reasons"></div><div id="keywords-extra" class="mt-6"></div></div>
     </div>
       </div>
 
@@ -62,10 +62,17 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/charts.js"></script>
-  <script src="../assets/js/pages/satisfaction.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/core/charts.js"></script>
+  <script src="../assets/js/admin/satisfaction.js"></script>
 </body>
 </html>

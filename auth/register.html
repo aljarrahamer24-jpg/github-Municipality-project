@@ -14,61 +14,73 @@
 </head>
 <body data-layout="auth" data-active="" data-root="../">
   <main id="content">
-    <h1>إنشاء حساب جديد</h1>
-    <p class="lead">أنشئ حسابك كمواطن لتقديم البلاغات ومتابعتها.</p>
-    <form id="register-form" class="stack mt-6" novalidate>
-      <div class="field" data-required>
-        <label class="label">الاسم الكامل<span class="req">*</span></label>
-        <div class="input-wrap"><i data-icon="user"></i><input class="input" placeholder="الاسم الرباعي"></div>
-        <p class="error-text">يرجى إدخال الاسم الكامل</p>
-      </div>
-      <div class="grid sm-cols-2">
-        <div class="field" data-required>
-          <label class="label">رقم الهاتف<span class="req">*</span></label>
-          <div class="input-wrap"><i data-icon="phone"></i><input class="input" placeholder="07XXXXXXXX" dir="ltr"></div>
-          <p class="error-text">رقم الهاتف مطلوب</p>
+    <div id="register-step">
+      <h1>إنشاء حساب جديد</h1>
+      <p class="lead">أنشئ حسابك كمواطن لتقديم البلاغات ومتابعتها.</p>
+      <div id="form-alert" class="mt-6" hidden></div>
+      <form id="register-form" class="stack mt-6" novalidate>
+        <div class="field">
+          <label class="label" for="full-name">الاسم الكامل<span class="req">*</span></label>
+          <div class="input-wrap"><i data-icon="user"></i><input class="input" id="full-name" autocomplete="name" maxlength="120" placeholder="الاسم الرباعي"></div>
+          <p class="error-text">يرجى إدخال الاسم الكامل (3 أحرف على الأقل)</p>
+        </div>
+        <div class="grid sm-cols-2">
+          <div class="field">
+            <label class="label" for="phone">رقم الهاتف<span class="req">*</span></label>
+            <div class="input-wrap"><i data-icon="phone"></i><input class="input" id="phone" type="tel" autocomplete="tel" placeholder="07XXXXXXXX" dir="ltr"></div>
+            <p class="error-text">أدخل رقم هاتف صحيح (10 أرقام)</p>
+          </div>
+          <div class="field">
+            <label class="label" for="area">منطقة السكن</label>
+            <select class="select" id="area"><option value="">اختر المنطقة</option></select>
+            <p class="hint">اختياري</p>
+          </div>
         </div>
         <div class="field">
-          <label class="label">الرقم الوطني</label>
-          <div class="input-wrap"><i data-icon="credit-card"></i><input class="input" placeholder="0000000000" dir="ltr"></div>
-          <p class="hint">اختياري</p>
+          <label class="label" for="email">البريد الإلكتروني<span class="req">*</span></label>
+          <div class="input-wrap"><i data-icon="mail"></i><input class="input" id="email" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr"></div>
+          <p class="error-text">أدخل بريداً إلكترونياً صحيحاً</p>
         </div>
-      </div>
-      <div class="field" data-required>
-        <label class="label">البريد الإلكتروني<span class="req">*</span></label>
-        <div class="input-wrap"><i data-icon="mail"></i><input class="input" type="email" placeholder="name@example.com"></div>
-        <p class="error-text">البريد الإلكتروني مطلوب</p>
-      </div>
-      <div class="field">
-        <label class="label">منطقة السكن</label>
-        <select class="select">
-          <option value="" disabled selected>اختر المنطقة</option>
-          <option>وسط البلد</option><option>حي النزهة</option><option>حي الروضة</option><option>حي الياسمين</option>
-          <option>حي الجامعة</option><option>الحي الشرقي</option><option>حي الورود</option><option>المنطقة الصناعية</option>
-        </select>
-      </div>
-      <div class="grid sm-cols-2">
-        <div class="field" data-required>
-          <label class="label">كلمة المرور<span class="req">*</span></label>
-          <div class="input-wrap"><i data-icon="lock"></i><input class="input" type="password" placeholder="••••••••"></div>
-          <p class="hint">8 أحرف على الأقل</p>
-          <p class="error-text">كلمة المرور مطلوبة</p>
+        <div class="grid sm-cols-2">
+          <div class="field">
+            <label class="label" for="password">كلمة المرور<span class="req">*</span></label>
+            <div class="input-wrap"><i data-icon="lock"></i><input class="input" id="password" type="password" autocomplete="new-password" placeholder="••••••••"></div>
+            <p class="hint">8 أحرف على الأقل، وتتضمن حروفاً وأرقاماً</p>
+            <p class="error-text">كلمة المرور 8 أحرف على الأقل وتتضمن حروفاً وأرقاماً</p>
+          </div>
+          <div class="field">
+            <label class="label" for="password2">تأكيد كلمة المرور<span class="req">*</span></label>
+            <div class="input-wrap"><i data-icon="lock"></i><input class="input" id="password2" type="password" autocomplete="new-password" placeholder="••••••••"></div>
+            <p class="error-text">كلمتا المرور غير متطابقتين</p>
+          </div>
         </div>
-        <div class="field">
-          <label class="label">تأكيد كلمة المرور<span class="req">*</span></label>
-          <div class="input-wrap"><i data-icon="lock"></i><input class="input" type="password" placeholder="••••••••"></div>
-          <p class="error-text">كلمتا المرور غير متطابقتين</p>
+        <div class="field" id="terms-field">
+          <label class="check"><input type="checkbox" id="terms"> أوافق على شروط الاستخدام وسياسة الخصوصية</label>
+          <p class="error-text">يجب الموافقة على الشروط للمتابعة</p>
         </div>
-      </div>
-      <label class="check"><input type="checkbox" required> أوافق على <a class="link" href="#">شروط الاستخدام</a> وسياسة الخصوصية</label>
-      <button class="btn btn-primary btn-lg btn-block" type="submit">إنشاء الحساب</button>
-    </form>
-    <p class="text-center text-sm c-2 mt-6">لديك حساب بالفعل؟ <a class="link fw-600" href="login.html">تسجيل الدخول</a></p>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">إنشاء الحساب</button>
+      </form>
+      <p class="text-center text-sm c-2 mt-6">لديك حساب بالفعل؟ <a class="link fw-600" href="login.html">تسجيل الدخول</a></p>
+    </div>
+
+    <div id="register-confirm" class="text-center" hidden>
+      <span class="result-icon box-success icon-box"><i data-icon="mail-check"></i></span>
+      <h1 class="mt-4">تحقق من بريدك الإلكتروني</h1>
+      <p class="lead leading-loose">أرسلنا رابط تفعيل الحساب إلى <b id="confirm-email" class="ltr"></b>. افتح الرابط ثم سجّل الدخول.</p>
+      <a class="btn btn-primary btn-block mt-6" href="login.html">الذهاب لتسجيل الدخول</a>
+    </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/auth.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/auth/register.js"></script>
 </body>
 </html>

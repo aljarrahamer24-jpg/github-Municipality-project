@@ -35,8 +35,8 @@
             <div class="field"><label class="label" for="department">القسم</label><select class="select" id="department"></select></div>
           </div>
           <div class="field"><label class="label" for="assignee">الموظف المسؤول</label><select class="select" id="assignee"></select></div>
-          <div class="field"><label class="label">ملاحظة التحديث</label><textarea class="textarea" rows="3" style="min-height:80px" placeholder="مثال: تم إرسال الفريق الميداني..."></textarea><p class="hint">تظهر للمواطن ضمن سجل الحالات</p></div>
-          <div class="field" id="after-upload" hidden><label class="label">صور بعد المعالجة<span class="req">*</span></label><div data-upload data-compact data-label="ارفع صور الإنجاز"></div></div>
+          <div class="field"><label class="label">ملاحظة التحديث</label><textarea class="textarea" id="status-note" rows="3" maxlength="1000" style="min-height:80px" placeholder="مثال: تم إرسال الفريق الميداني..."></textarea><p class="hint">تظهر للمواطن ضمن سجل الحالات عند تغيير الحالة</p></div>
+          <div class="field" id="after-upload"><label class="label" for="image-kind">صور المعالجة</label><select class="select" id="image-kind"><option value="before">صور قبل المعالجة</option><option value="after">صور بعد المعالجة (الإنجاز)</option></select><div data-upload data-compact id="staff-uploader" data-label="ارفع صور المعالجة"></div><p class="hint" id="after-hint">يُنصح بإرفاق صور الإنجاز عند تغيير الحالة إلى "تم الحل"</p></div>
           <button class="btn btn-primary btn-block" id="save"><i data-icon="save"></i>حفظ التحديث</button>
         </div>
       </div>
@@ -68,7 +68,7 @@
 
         <div class="card">
           <div class="card-header"><div><h2 class="card-title">التعليقات والملاحظات الداخلية</h2><p class="card-sub">الملاحظات الداخلية لا تظهر للمواطن</p></div></div>
-          <div class="card-body" id="comments"></div>
+          <div class="card-body"><div id="comments"></div><div id="composer"></div></div>
         </div>
       </div>
 
@@ -85,11 +85,18 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
   <script src="../assets/vendor/leaflet/leaflet.js"></script>
-  <script src="../assets/js/maps.js"></script>
-  <script src="../assets/js/pages/staff-complaint.js"></script>
+  <script src="../assets/js/core/maps.js"></script>
+  <script src="../assets/js/staff/complaint.js"></script>
 </body>
 </html>

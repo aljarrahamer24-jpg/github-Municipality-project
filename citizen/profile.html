@@ -15,46 +15,58 @@
 <body data-layout="citizen" data-active="profile" data-root="../">
   <main id="content">
     <div class="container-sm stack-lg" style="margin-inline:auto;padding:0">
-    <div class="page-header">
-      <div class="page-header-row">
-        <div>
-          <h1 class="page-title">حسابي</h1>
-          <p class="page-desc">إدارة بياناتك الشخصية وتفضيلات الإشعارات.</p>
-        </div>
-      </div>
-    </div>
-      <div class="card"><div class="card-body flex items-center gap-4">
-        <span class="avatar lg">ع م</span>
-        <div><p class="text-lg fw-600">عبدالله محمود</p><p class="text-sm c-3">عضو منذ يناير 2026 · 7 بلاغات</p></div>
-      </div></div>
-
-      <div class="card">
-        <div class="card-header"><h2 class="card-title">البيانات الشخصية</h2></div>
-        <div class="card-body grid sm-cols-2">
-          <div class="field"><label class="label">الاسم الكامل</label><div class="input-wrap"><i data-icon="user"></i><input class="input" value="عبدالله محمود"></div></div>
-          <div class="field"><label class="label">رقم الهاتف</label><div class="input-wrap"><i data-icon="phone"></i><input class="input" value="0790000001" dir="ltr"></div></div>
-          <div class="field"><label class="label">البريد الإلكتروني</label><div class="input-wrap"><i data-icon="mail"></i><input class="input" value="abdullah@example.com"></div></div>
-          <div class="field"><label class="label">منطقة السكن</label>
-            <select class="select"><option>وسط البلد</option><option>حي النزهة</option><option>حي الروضة</option><option>حي الياسمين</option><option selected>حي الجامعة</option><option>الحي الشرقي</option><option>حي الورود</option><option>المنطقة الصناعية</option></select>
+      <div class="page-header">
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">حسابي</h1>
+            <p class="page-desc">إدارة بياناتك الشخصية وتفضيلات الإشعارات.</p>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header"><h2 class="card-title">تفضيلات الإشعارات</h2></div>
-        <div class="card-body stack">
-          <label class="switch"><input type="checkbox" checked><span class="track"></span>إشعارات الرسائل النصية</label>
-          <label class="switch"><input type="checkbox" checked><span class="track"></span>إشعارات البريد الإلكتروني</label>
-          <label class="switch"><input type="checkbox" checked><span class="track"></span>التنبيهات الجوية لمنطقتي</label>
-        </div>
-      </div>
+      <div class="card"><div class="card-body flex items-center gap-4">
+        <span class="avatar lg" id="avatar"></span>
+        <div><p class="text-lg fw-600" id="display-name"></p><p class="text-sm c-3" id="member-since"></p></div>
+      </div></div>
 
-      <div class="flex justify-end"><button class="btn btn-primary" data-toast="تم حفظ التغييرات"><i data-icon="save"></i>حفظ التغييرات</button></div>
+      <form class="card" id="profile-form" novalidate>
+        <div class="card-header"><h2 class="card-title">البيانات الشخصية</h2></div>
+        <div class="card-body grid sm-cols-2">
+          <div class="field"><label class="label" for="full-name">الاسم الكامل</label><div class="input-wrap"><i data-icon="user"></i><input class="input" id="full-name" maxlength="120"></div><p class="error-text">الاسم 3 أحرف على الأقل</p></div>
+          <div class="field"><label class="label" for="phone">رقم الهاتف</label><div class="input-wrap"><i data-icon="phone"></i><input class="input" id="phone" type="tel" dir="ltr"></div><p class="error-text">رقم هاتف غير صحيح</p></div>
+          <div class="field"><label class="label" for="email">البريد الإلكتروني</label><div class="input-wrap"><i data-icon="mail"></i><input class="input" id="email" dir="ltr" disabled></div><p class="hint">لا يمكن تغيير البريد من هنا</p></div>
+          <div class="field"><label class="label" for="area">منطقة السكن</label><select class="select" id="area"></select></div>
+        </div>
+        <div class="card-header" style="border-top:1px solid var(--line)"><h2 class="card-title">تفضيلات الإشعارات</h2></div>
+        <div class="card-body stack col" style="align-items:flex-start">
+          <label class="switch"><input type="checkbox" data-pref="notify_email" checked><span class="track"></span>إشعارات البريد الإلكتروني</label>
+          <label class="switch"><input type="checkbox" data-pref="notify_sms" checked><span class="track"></span>إشعارات الرسائل النصية</label>
+          <label class="switch"><input type="checkbox" data-pref="notify_weather" checked><span class="track"></span>التنبيهات الجوية لمنطقتي</label>
+        </div>
+        <div class="card-footer flex justify-end"><button class="btn btn-primary" type="submit"><i data-icon="save"></i>حفظ التغييرات</button></div>
+      </form>
+
+      <form class="card" id="password-form" novalidate>
+        <div class="card-header"><h2 class="card-title">تغيير كلمة المرور</h2></div>
+        <div class="card-body grid sm-cols-2">
+          <div class="field"><label class="label" for="new-password">كلمة المرور الجديدة</label><div class="input-wrap"><i data-icon="lock"></i><input class="input" id="new-password" type="password" autocomplete="new-password"></div><p class="error-text">8 أحرف على الأقل وتتضمن حروفاً وأرقاماً</p></div>
+          <div class="field"><label class="label" for="new-password2">تأكيد كلمة المرور</label><div class="input-wrap"><i data-icon="lock"></i><input class="input" id="new-password2" type="password" autocomplete="new-password"></div><p class="error-text">كلمتا المرور غير متطابقتين</p></div>
+        </div>
+        <div class="card-footer flex justify-end"><button class="btn btn-outline" type="submit"><i data-icon="key-round"></i>تحديث كلمة المرور</button></div>
+      </form>
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/citizen/profile.js"></script>
 </body>
 </html>

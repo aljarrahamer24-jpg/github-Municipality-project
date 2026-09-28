@@ -37,6 +37,11 @@
               <p class="text-sm fw-600 mb-3">الصور المرفقة</p>
               <div class="photos" id="photos"></div>
             </div>
+            <div id="add-photos" hidden>
+              <p class="text-sm fw-600 mb-3">إضافة صور</p>
+              <div data-upload data-compact id="more-photos" data-label="أضف صوراً أخرى للمشكلة"></div>
+              <button class="btn btn-secondary btn-sm mt-3" id="upload-more" type="button"><i data-icon="upload"></i>رفع الصور</button>
+            </div>
             <div id="after-wrap" hidden>
               <p class="text-sm fw-600 mb-3">صور بعد المعالجة</p>
               <div class="photos" id="after"></div>
@@ -51,7 +56,7 @@
 
         <div class="card">
           <div class="card-header"><div><h2 class="card-title">التعليقات والتحديثات</h2><p class="card-sub">تواصل مع الفريق المسؤول عن البلاغ</p></div></div>
-          <div class="card-body" id="comments"></div>
+          <div class="card-body"><div id="comments"></div><div id="composer"></div></div>
         </div>
       </div>
 
@@ -68,11 +73,18 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
   <script src="../assets/vendor/leaflet/leaflet.js"></script>
-  <script src="../assets/js/maps.js"></script>
-  <script src="../assets/js/pages/citizen-complaint.js"></script>
+  <script src="../assets/js/core/maps.js"></script>
+  <script src="../assets/js/citizen/complaint.js"></script>
 </body>
 </html>

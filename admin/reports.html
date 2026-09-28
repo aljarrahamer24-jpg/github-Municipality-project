@@ -15,55 +15,53 @@
 <body data-layout="admin" data-active="reports" data-root="../">
   <main id="content">
     <div class="no-print">
-    <div class="page-header">
-      <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>التقارير الشهرية</span></nav>
-    <div class="page-header-row">
-        <div>
-          <h1 class="page-title">التقارير الشهرية</h1>
-          <p class="page-desc">أنشئ تقريراً شهرياً شاملاً عن أداء البلدية، واعرضه أو اطبعه أو صدّره PDF.</p>
+      <div class="page-header">
+        <nav class="breadcrumbs" aria-label="مسار التنقل"><a href="index.html">الرئيسية</a><i data-icon="chevron-left"></i><span>التقارير الشهرية</span></nav>
+        <div class="page-header-row">
+          <div>
+            <h1 class="page-title">التقارير الشهرية</h1>
+            <p class="page-desc">اختر الشهر لإنشاء تقرير شامل عن أداء البلدية من البيانات الفعلية، ثم اعرضه أو اطبعه أو صدّره PDF.</p>
+          </div>
         </div>
       </div>
-    </div>
       <div class="card mb-6"><div class="card-body flex col sm-row wrap gap-3" style="align-items:stretch">
-        <div class="field" style="min-width:200px"><label class="label" for="month">اختيار الشهر</label>
-          <select class="select" id="month"><option>سبتمبر 2026</option><option>أغسطس 2026</option><option>يوليو 2026</option><option>يونيو 2026</option><option>مايو 2026</option><option>أبريل 2026</option></select></div>
-        <div class="field" style="min-width:200px"><label class="label">نوع التقرير</label>
-          <select class="select"><option>تقرير شامل</option><option>تقرير الأقسام</option><option>تقرير المناطق</option></select></div>
+        <div class="field" style="min-width:220px"><label class="label" for="month">اختيار الشهر</label><select class="select" id="month"></select></div>
         <button class="btn btn-primary" id="generate" style="align-self:flex-end"><i data-icon="refresh-cw"></i>إنشاء التقرير</button>
-        <div class="flex gap-2 sm-ms-auto" style="align-self:flex-end;margin-inline-start:auto">
-          <button class="btn btn-outline" data-needs-report data-print><i data-icon="printer"></i>طباعة</button>
-          <button class="btn btn-outline" data-needs-report id="export"><i data-icon="download"></i>تصدير PDF</button>
+        <div class="flex gap-2" style="align-self:flex-end;margin-inline-start:auto">
+          <button class="btn btn-outline" data-needs-report data-print disabled><i data-icon="printer"></i>طباعة</button>
+          <button class="btn btn-outline" data-needs-report id="export" disabled><i data-icon="download"></i>تصدير PDF</button>
         </div>
       </div></div>
     </div>
 
-    <div class="card no-print" id="placeholder" hidden><div class="empty">
+    <div class="card no-print" id="placeholder"><div class="empty">
       <span class="icon-box lg round box-neutral"><i data-icon="file-chart-column"></i></span>
-      <h3>اضغط "إنشاء التقرير" لمعاينة تقرير <span id="placeholder-month"></span></h3>
+      <h3>اختر الشهر ثم اضغط "إنشاء التقرير"</h3>
+      <p>يتم حساب جميع الأرقام مباشرة من قاعدة البيانات.</p>
     </div></div>
 
     <!-- معاينة التقرير (Preview) -->
-    <article class="report" id="report">
+    <article class="report" id="report" hidden>
       <header class="report-head">
         <div class="flex items-center gap-3">
           <svg class="brand-logo" style="width:48px;height:48px" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#0b5d51"/><path d="M10 30V18l10-7.5L30 18v12h-6.5v-7h-7v7z" fill="#fff"/><circle cx="20" cy="16.5" r="2" fill="#c8963e"/></svg>
-          <div><p class="text-lg fw-700">بلدية المدينة</p><p class="text-sm c-3">إدارة الخدمات والشكاوى</p></div>
+          <div><p class="text-lg fw-700" id="r-municipality">بلدية المدينة</p><p class="text-sm c-3">إدارة الخدمات والشكاوى</p></div>
         </div>
         <div class="text-end">
           <p class="text-xl fw-700 c-primary">التقرير الشهري للبلاغات</p>
-          <p class="text-sm c-2"><span id="r-month"></span> · رقم التقرير RPT-2026-09</p>
+          <p class="text-sm c-2"><span id="r-month"></span> · رقم التقرير <span class="ltr" id="r-code"></span></p>
         </div>
       </header>
 
       <div class="report-body">
         <section>
-          <h3>1. ملخص الأداء</h3>
-          <div class="grid grid-sm cols-2 md-cols-4">
-            <div class="report-kpi"><i data-icon="file-chart-column"></i><b>219</b><small>إجمالي البلاغات</small></div>
-            <div class="report-kpi"><i data-icon="circle-check"></i><b>89.5%</b><small>نسبة الإغلاق</small></div>
-            <div class="report-kpi"><i data-icon="timer"></i><b>3.4 يوم</b><small>متوسط زمن الحل</small></div>
-            <div class="report-kpi"><i data-icon="face-slightly-smiling"></i><b>4.2 من 5</b><small>رضا المواطنين</small></div>
-          </div>
+          <h3>الملخص</h3>
+          <p class="report-summary" id="r-summary"></p>
+        </section>
+
+        <section>
+          <h3>1. مؤشرات الأداء</h3>
+          <div class="grid grid-sm cols-2 md-cols-4" id="r-kpis"></div>
         </section>
 
         <section>
@@ -74,7 +72,7 @@
         <section>
           <h3>3. أداء الأقسام</h3>
           <div class="table-wrap">
-            <table class="table" style="min-width:520px">
+            <table class="table" style="min-width:560px">
               <thead><tr><th>القسم</th><th>البلاغات</th><th>نسبة الإغلاق</th><th>متوسط زمن الحل</th><th>الرضا</th></tr></thead>
               <tbody id="depts"></tbody>
             </table>
@@ -88,25 +86,33 @@
 
         <section>
           <h3>6. رضا المواطنين</h3>
-          <div class="grid sm-cols-3" style="padding:16px;border-radius:10px;background:var(--canvas)">
-            <div><p class="text-2xl fw-700">4.2</p><span class="stars sm"><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star" class="on"></i><i data-icon="star"></i></span><p class="text-xs c-3 mt-1">من 851 تقييماً</p></div>
-            <div><p class="text-2xl fw-700 c-success">80%</p><p class="text-xs c-3">نسبة الرضا (4 نجوم فأكثر)</p></div>
-            <div><p class="text-sm fw-600">أبرز أسباب عدم الرضا</p><p class="text-sm c-2 mt-1">التأخر في الاستجابة (58) · الحل غير كامل (36)</p></div>
-          </div>
+          <div class="grid sm-cols-3" style="padding:16px;border-radius:10px;background:var(--canvas)" id="r-satisfaction"></div>
+        </section>
+
+        <section>
+          <h3>7. المشاكل المتكررة</h3>
+          <div id="r-recurring"></div>
         </section>
 
         <footer class="report-foot">
-          <span>تم إنشاء التقرير آلياً من منصة إدارة الشكاوى — 28 سبتمبر 2026</span>
-          <span>صفحة 1 من 1</span>
+          <span id="r-generated"></span>
+          <span>منصة إدارة شكاوى وطلبات خدمات البلدية</span>
         </footer>
       </div>
     </article>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/charts.js"></script>
-  <script src="../assets/js/pages/reports.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/core/charts.js"></script>
+  <script src="../assets/js/admin/reports.js"></script>
 </body>
 </html>

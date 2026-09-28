@@ -17,27 +17,21 @@
     <h1>تسجيل الدخول</h1>
     <p class="lead">مرحباً بعودتك، سجّل دخولك لمتابعة بلاغاتك.</p>
 
-    <!-- اختيار الدور: للعرض التجريبي فقط (مرحلة التصميم) -->
-    <div class="demo-roles">
-      <p>دخول تجريبي (مرحلة التصميم)</p>
-      <div class="role-grid">
-        <button type="button" class="role-opt active" data-role="citizen"><i data-icon="user"></i>مواطن</button>
-        <button type="button" class="role-opt" data-role="employee"><i data-icon="briefcase"></i>موظف</button>
-        <button type="button" class="role-opt" data-role="admin"><i data-icon="shield-check"></i>مدير</button>
-      </div>
-    </div>
+    <div id="form-alert" class="mt-6" hidden></div>
 
-    <form id="login-form" class="stack mt-6">
+    <form id="login-form" class="stack mt-6" novalidate>
       <div class="field">
-        <label class="label" for="email">البريد الإلكتروني أو رقم الهاتف</label>
-        <div class="input-wrap"><i data-icon="mail"></i><input class="input" id="email" value="abdullah@example.com" placeholder="name@example.com"></div>
+        <label class="label" for="email">البريد الإلكتروني</label>
+        <div class="input-wrap"><i data-icon="mail"></i><input class="input" id="email" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr" required></div>
+        <p class="error-text">أدخل بريداً إلكترونياً صحيحاً</p>
       </div>
       <div class="field">
         <label class="label" for="password">كلمة المرور</label>
-        <div class="input-wrap"><i data-icon="lock"></i><input class="input" id="password" type="password" value="password123"></div>
+        <div class="input-wrap"><i data-icon="lock"></i><input class="input" id="password" type="password" autocomplete="current-password" placeholder="••••••••" required></div>
+        <p class="error-text">أدخل كلمة المرور</p>
       </div>
       <div class="flex items-center justify-between">
-        <label class="check"><input type="checkbox" checked> تذكرني</label>
+        <span class="text-xs c-3">يتم توجيهك تلقائياً حسب صلاحياتك</span>
         <a class="link" href="forgot-password.html">نسيت كلمة المرور؟</a>
       </div>
       <button class="btn btn-primary btn-lg btn-block" type="submit">تسجيل الدخول</button>
@@ -45,9 +39,16 @@
     <p class="text-center text-sm c-2 mt-6">ليس لديك حساب؟ <a class="link fw-600" href="register.html">إنشاء حساب جديد</a></p>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/auth.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/js/auth/login.js"></script>
 </body>
 </html>

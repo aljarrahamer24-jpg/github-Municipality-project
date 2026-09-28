@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body data-layout="admin" data-active="recurring" data-root="../">
@@ -19,13 +20,19 @@
     <div class="page-header-row">
         <div>
           <h1 class="page-title">المشاكل المتكررة</h1>
-          <p class="page-desc">يكتشف النظام تلقائياً المشاكل التي تتكرر في نفس الموقع (3 بلاغات أو أكثر خلال 6 أشهر ضمن 200 متر).</p>
+          <p class="page-desc">يكتشف النظام المشاكل التي تتكرر في نفس الموقع: نفس نوع المشكلة + مواقع متقاربة + فترة زمنية محددة + عدد بلاغات يتجاوز الحد. (تحليل إحصائي بدون ذكاء اصطناعي)</p>
         </div>
         <div class="page-actions no-print"><div class="segmented" id="view"><button class="active" data-view="cards"><i data-icon="layout-grid"></i>بطاقات</button><button data-view="table"><i data-icon="list"></i>جدول</button></div></div>
       </div>
     </div>
     <div class="stack-lg">
       <div class="grid grid-sm cols-2 lg-cols-4" id="stats"></div>
+      <form class="card no-print" id="params"><div class="card-body grid sm-cols-2 lg-cols-4" style="align-items:end">
+        <div class="field"><label class="label" for="p-radius">المسافة القصوى بين البلاغات (متر)</label><input class="input" id="p-radius" type="number" min="20" max="5000" step="10"></div>
+        <div class="field"><label class="label" for="p-months">الفترة الزمنية (أشهر)</label><input class="input" id="p-months" type="number" min="1" max="36"></div>
+        <div class="field"><label class="label" for="p-min">الحد الأدنى لعدد البلاغات</label><input class="input" id="p-min" type="number" min="2" max="50"></div>
+        <button class="btn btn-primary" type="submit"><i data-icon="refresh-cw"></i>تحليل من جديد</button>
+      </div></form>
       <div class="grid md-cols-2 xl-cols-3" id="cards"></div>
       <div class="card card-clip" id="table-view" hidden>
         <div class="table-wrap">
@@ -38,9 +45,19 @@
     </div>
   </main>
 
-  <script src="../assets/js/icons.js"></script>
-  <script src="../assets/js/data.js"></script>
-  <script src="../assets/js/ui.js"></script>
-  <script src="../assets/js/pages/recurring.js"></script>
+  <script src="../assets/vendor/supabase/supabase.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/core/icons.js"></script>
+  <script src="../assets/js/core/utils.js"></script>
+  <script src="../assets/js/core/supabase.js"></script>
+  <script src="../assets/js/core/ui.js"></script>
+  <script src="../assets/js/core/api.js"></script>
+  <script src="../assets/js/core/notifications.js"></script>
+  <script src="../assets/js/core/layout.js"></script>
+  <script src="../assets/js/core/app.js"></script>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
+  <script src="../assets/js/core/maps.js"></script>
+  <script src="../assets/js/core/complaints-table.js"></script>
+  <script src="../assets/js/admin/recurring.js"></script>
 </body>
 </html>
