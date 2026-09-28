@@ -1,9 +1,5 @@
 /* تحليل رضا المواطنين — إحصاءات التقييمات + تكرار الكلمات المفتاحية في التعليقات (بدون ذكاء اصطناعي) */
 App.page({ roles: ['admin'] }, async () => {
-  const reset = (id) => {
-    $('#' + id).innerHTML = '<div></div>'
-    return $('#' + id).firstElementChild
-  }
 
   async function render() {
     const v = $('#period').value
@@ -25,8 +21,8 @@ App.page({ roles: ['admin'] }, async () => {
       .map((r) => `<div class="dist-row"><span class="s">${r.stars}${icon('star')}</span>${progress(s.count ? (r.count / s.count) * 100 : 0, r.stars >= 4 ? 'success' : r.stars === 3 ? 'gold' : 'error')}<span class="n num">${r.count}</span></div>`)
       .join('')
 
-    Charts.line(reset('chart-months'), s.by_month.map((m) => ({ month: monthName(m.month), value: Number(m.value) })), { domain: [1, 5], height: 260 })
-    Charts.hbar(reset('chart-depts'), s.by_department.map((d) => ({ name: d.name.replace(/^قسم /, ''), value: Number(d.avg) })), { unit: 'من 5', name: 'التقييم', max: 5 })
+    Charts.line(Charts.host('chart-months'), s.by_month.map((m) => ({ month: monthName(m.month), value: Number(m.value) })), { domain: [1, 5], height: 260 })
+    Charts.hbar(Charts.host('chart-depts'), s.by_department.map((d) => ({ name: d.name.replace(/^قسم /, ''), value: Number(d.avg) })), { unit: 'من 5', name: 'التقييم', max: 5 })
 
     // أسباب عدم الرضا = الكلمات المفتاحية السلبية الأكثر تكراراً
     const negative = s.keywords.filter((k) => k.sentiment === 'negative' && k.hits > 0)

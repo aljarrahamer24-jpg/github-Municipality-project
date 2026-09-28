@@ -98,6 +98,11 @@ App.page({ roles: ['admin'] }, async ({ profile: me }) => {
         const e = f.elements
         const need = u ? ['full_name'] : ['full_name', 'email', 'password']
         if (!required(f, need)) return null
+        // حماية من إغلاق المدير على نفسه: لا يلغي صلاحياته ولا يوقف حسابه بنفسه
+        if (u && u.id === me.id && (e.role.value !== 'admin' || !e.is_active.checked)) {
+          toast('لا يمكنك إلغاء صلاحياتك أو إيقاف حسابك بنفسك. اطلب ذلك من مدير آخر.', 'error')
+          return null
+        }
         if (e.role.value === 'employee' && !e.department_id.value) {
           e.department_id.closest('.field').classList.add('is-invalid')
           return null

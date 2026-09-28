@@ -203,8 +203,16 @@ const Charts = (() => {
     )
   }
 
+  // عنصر رسم جديد داخل الحاوية (يمنع تكرار الرسوم ومستمعي تغيير الحجم عند إعادة الرسم)
+  const host = (id) => {
+    const el = document.getElementById(id)
+    el.innerHTML = '<div></div>'
+    return el.firstElementChild
+  }
+
   return {
     SERIES,
+    host,
     hbar,
     columns,
     area: (el, data, series, opts) => lines(el, data, series, { ...opts, area: true }),

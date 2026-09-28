@@ -1,12 +1,5 @@
 /* لوحة المدير — كل الأرقام والرسوم من دوال SQL في Supabase (بدون ذكاء اصطناعي) */
 App.page({ roles: ['admin'] }, async () => {
-  // يرسم في عنصر جديد في كل مرة (لتجنب تكرار الرسوم عند تغيير الفترة)
-  const chartInto = (id, fn) => {
-    const host = $('#' + id)
-    host.innerHTML = '<div></div>'
-    fn(host.firstElementChild)
-  }
-
   // المؤشرات الرئيسية
   load($('#kpis'), async () => {
     const s = await API.stats()
@@ -56,18 +49,16 @@ App.page({ roles: ['admin'] }, async () => {
     await Promise.all([
       load($('#chart-month'), async () => {
         const trend = await API.trend(months)
-        chartInto('chart-month', (el) =>
-          Charts.area(el, trend.map((t) => ({ month: monthName(t.month), received: t.received, closed: t.closed })), [
-            { key: 'received', name: 'المستلمة', color: Charts.SERIES[0] },
-            { key: 'closed', name: 'المغلقة', color: Charts.SERIES[2] },
-          ]),
-        )
+        Charts.area(Charts.host('chart-month'), trend.map((t) => ({ month: monthName(t.month), received: t.received, closed: t.closed })), [
+          { key: 'received', name: 'المستلمة', color: Charts.SERIES[0] },
+          { key: 'closed', name: 'المغلقة', color: Charts.SERIES[2] },
+        ])
       }),
       load($('#chart-category'), async () => {
         const b = await API.breakdown(from, null)
-        chartInto('chart-category', (el) => Charts.hbar(el, b.by_category.slice(0, 8)))
-        chartInto('chart-department', (el) => Charts.hbar(el, b.by_department.map((d) => ({ name: d.name.replace(/^قسم /, ''), value: d.value }))))
-        chartInto('chart-district', (el) => Charts.hbar(el, b.by_area.slice(0, 8)))
+        Charts.hbar(Charts.host('chart-category'), b.by_category.slice(0, 8))
+        Charts.hbar(Charts.host('chart-department'), b.by_department.map((d) => ({ name: d.name.replace(/^قسم /, ''), value: d.value })))
+        Charts.hbar(Charts.host('chart-district'), b.by_area.slice(0, 8))
       }),
     ])
   }

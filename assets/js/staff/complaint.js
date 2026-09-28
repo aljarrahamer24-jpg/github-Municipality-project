@@ -45,23 +45,28 @@ App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
   /* ---------- لوحة الإجراءات ---------- */
   const [departments, staff] = await Promise.all([API.departments(), API.staff()])
   const statusSel = $('#status')
-  const final = ['closed', 'rejected'].includes(c.status) && !isAdmin
   fillSelect(statusSel, Object.entries(STATUS_LABELS), { value: c.status })
   fillSelect($('#priority'), Object.entries(PRIORITY_LABELS), { value: c.priority })
   fillSelect($('#department'), departments.filter((d) => d.is_active || d.id === c.department_id).map((d) => [d.id, d.name.replace(/^قسم /, '')]), { value: c.department_id, placeholder: 'غير محدد' })
   $('#department').disabled = !isAdmin // تحويل البلاغ لقسم آخر من صلاحيات المدير
   const fillAssignees = () => {
     const dept = $('#department').value
-    const list = staff.filter((s) => s.role === 'employee' && (!dept || s.department_id === dept))
+    // الموظف المسند حالياً يبقى في القائمة حتى لو نُقل لقسم آخر (وإلا يُلغى إسناده عند أي حفظ)
+    const list = staff.filter((s) => (s.role === 'employee' && (!dept || s.department_id === dept)) || s.id === c.assigned_employee_id)
     fillSelect($('#assignee'), list.map((s) => [s.id, s.full_name || '—']), { placeholder: 'غير محدد', value: c.assigned_employee_id })
   }
   fillAssignees()
   $('#department').addEventListener('change', fillAssignees)
-  if (final) {
+  // الموظف لا يعدّل البلاغ بعد إغلاقه أو رفضه (القاعدة نفسها مطبقة في قاعدة البيانات)
+  const lockIfFinal = (withMessage = true) => {
+    if (isAdmin || !['closed', 'rejected'].includes(c.status)) return false
     $$('#status, #priority, #assignee, #status-note, #save').forEach((el) => (el.disabled = true))
+    if (!withMessage) return true
     $('#saved').hidden = false
     $('#saved').innerHTML = alertBox('info', 'البلاغ مغلق', 'لا يمكن تعديل البلاغ بعد إغلاقه أو رفضه. يمكن للمدير إعادة فتحه عند الحاجة.')
+    return true
   }
+  lockIfFinal()
 
   const kindSel = $('#image-kind')
   statusSel.addEventListener('change', () => {
@@ -80,11 +85,14 @@ App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
       note: $('#status-note').value.trim(),
     }
     const hasChange = changes.status || changes.priority || changes.departmentId || changes.assigneeId || changes.clearAssignee
-    if (!hasChange && !files.length) return toast('لم يتم تغيير أي شيء', 'error')
+    // ملاحظة بدون تغيير الحالة لا تظهر في سجل الحالات، لذلك تُحفظ كملاحظة داخلية حتى لا تضيع
+    const noteOnly = !changes.status && !!changes.note
+    if (!hasChange && !files.length && !noteOnly) return toast('لم يتم تغيير أي شيء', 'error')
     if (changes.status === 'resolved' && !files.length && !imagesCache.some((i) => i.kind === 'after')) {
       const go = await confirmDialog({ title: 'بدون صور إنجاز؟', message: 'لم يتم إرفاق صور بعد المعالجة. هل تريد تغيير الحالة إلى "تم الحل" بدون صور؟', confirmText: 'متابعة' })
       if (!go) return
     }
+    $('#saved').hidden = true // لا نُبقي رسالة الحفظ السابقة أثناء حفظ جديد
     try {
       await withBusy(e.currentTarget, async () => {
         if (files.length) {
@@ -93,15 +101,22 @@ App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
           $('#staff-uploader').clear()
         }
         if (hasChange) await API.updateComplaint(changes)
+        if (noteOnly) await API.addNote(c.id, changes.note)
       })
       c = await API.complaint(c.id)
       renderHeader()
       fillSelect(statusSel, Object.entries(STATUS_LABELS), { value: c.status })
       $('#status-note').value = ''
       $('#saved').hidden = false
-      $('#saved').innerHTML = alertBox('success', 'تم حفظ التحديث', hasChange ? 'تم تسجيل التغيير في سجل الحالات وإشعار المواطن.' : 'تم رفع الصور.')
+      $('#saved').innerHTML = alertBox(
+        'success',
+        'تم حفظ التحديث',
+        changes.status ? 'تم تسجيل التغيير في سجل الحالات وإشعار المواطن.' : noteOnly ? 'تم حفظ الملاحظة كملاحظة داخلية.' : hasChange ? 'تم حفظ التغييرات.' : 'تم رفع الصور.',
+      )
       loadTimeline()
       loadImages()
+      if (noteOnly) loadComments()
+      lockIfFinal(false)
     } catch (err) {
       $('#saved').hidden = false
       $('#saved').innerHTML = alertBox('error', 'تعذر الحفظ', esc(toAppError(err).message))

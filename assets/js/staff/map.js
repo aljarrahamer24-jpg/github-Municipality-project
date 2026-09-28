@@ -17,7 +17,9 @@ App.page({ roles: ['employee', 'admin'] }, async () => {
   $('#sel-close').addEventListener('click', () => (card.hidden = true))
 
   let last = []
+  let seq = 0 // عند تغيير الفلاتر بسرعة نعرض نتيجة آخر طلب فقط
   async function update() {
+    const my = ++seq
     const from = f.period ? new Date(Date.now() - Number(f.period) * 86400000).toISOString() : null
     $('#count').textContent = '…'
     try {
@@ -28,17 +30,21 @@ App.page({ roles: ['employee', 'admin'] }, async () => {
         rows.push(...res.rows)
         if (rows.length >= res.count) break
       }
+      if (my !== seq) return
       last = rows
       m.draw(rows, f.mode)
       $('#count').textContent = formatNumber(rows.length)
     } catch (err) {
+      if (my !== seq) return
       $('#count').textContent = '—'
       toast(toAppError(err).message, 'error')
     }
 
     // المناطق الساخنة (دالة SQL: hotspot_areas)
     load($('#hot'), async () => {
-      const hot = (await API.hotspots({ days: f.period ? Number(f.period) : null, categoryId: f.cat || null, status: f.status || null })).slice(0, 6)
+      const all = await API.hotspots({ days: f.period ? Number(f.period) : null, categoryId: f.cat || null, status: f.status || null })
+      if (my !== seq) return
+      const hot = all.filter((h) => !f.dist || h.area_id === f.dist).slice(0, 6)
       if (!hot.length) return ($('#hot').innerHTML = empty('flame', 'لا توجد بلاغات ضمن الفلاتر المحددة'))
       const max = Math.max(...hot.map((h) => h.total))
       $('#hot').innerHTML = hot

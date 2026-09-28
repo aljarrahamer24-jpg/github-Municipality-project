@@ -60,13 +60,9 @@ App.page({ roles: ['admin'] }, async () => {
 
       // آخر 6 أشهر حتى الشهر المختار
       const upto = trend.filter((t) => t.month <= month).slice(-6)
-      const reset = (id) => {
-        $('#' + id).innerHTML = '<div></div>'
-        return $('#' + id).firstElementChild
-      }
-      Charts.columns(reset('chart-months'), upto.map((t) => ({ month: monthName(t.month), received: t.received })), { key: 'received', name: 'المستلمة', unit: 'بلاغ', height: 220 })
-      Charts.hbar(reset('chart-problems'), r.breakdown.by_category.slice(0, 5))
-      Charts.hbar(reset('chart-areas'), r.breakdown.by_area.slice(0, 5))
+      Charts.columns(Charts.host('chart-months'), upto.map((t) => ({ month: monthName(t.month), received: t.received })), { key: 'received', name: 'المستلمة', unit: 'بلاغ', height: 220 })
+      Charts.hbar(Charts.host('chart-problems'), r.breakdown.by_category.slice(0, 5))
+      Charts.hbar(Charts.host('chart-areas'), r.breakdown.by_area.slice(0, 5))
 
       const depts = r.breakdown.by_department
       $('#depts').innerHTML = depts.length

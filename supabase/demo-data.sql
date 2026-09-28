@@ -75,6 +75,7 @@ declare
   v_created timestamptz;
   v_resolved timestamptz;
   v_closed timestamptz;
+  v_span interval; -- المدة بين الإنشاء وآخر مرحلة (لترتيب السجل الزمني منطقياً)
   v_status public.complaint_status;
   v_lat double precision;
   v_lng double precision;
@@ -142,6 +143,10 @@ begin
     if v_status in ('assigned', 'in_progress', 'resolved', 'closed') then
       select id into v_emp from public.profiles where role = 'employee' and department_id = v_cat.department_id limit 1;
     end if;
+    -- لا يوجد موظف في هذا القسم: البلاغ يبقى قيد المراجعة بدل "تم التعيين" بدون موظف
+    if v_emp is null and v_status = 'assigned' then
+      v_status := 'under_review';
+    end if;
     v_resolved := null; v_closed := null;
     if v_status in ('resolved', 'closed') then
       v_resolved := least(now() - interval '1 hour', v_created + make_interval(hours => (6 + floor(random() * v_cat.sla_days * 30))::integer));
@@ -149,6 +154,8 @@ begin
     if v_status = 'closed' then
       v_closed := least(now() - interval '30 minutes', v_resolved + interval '20 hours');
     end if;
+    -- كل مراحل السجل تقع بين الإنشاء والحل (أو الآن) وبالترتيب الصحيح
+    v_span := coalesce(v_resolved, least(now() - interval '10 minutes', v_created + interval '3 days')) - v_created;
 
     insert into public.complaints (citizen_id, category_id, area_id, title, description, latitude, longitude, address,
                                    priority, status, created_at, assigned_employee_id, resolved_at, closed_at)
@@ -167,19 +174,19 @@ begin
     values (v_id, null, 'new', 'النظام', 'تم استلام البلاغ وإرسال رقم المتابعة للمواطن.', v_created);
     if v_status <> 'new' then
       insert into public.complaint_status_history (complaint_id, old_status, new_status, changed_by_name, note, created_at)
-      values (v_id, 'new', 'under_review', 'مركز الاستقبال', 'تمت مراجعة البلاغ والتحقق من البيانات.', v_created + interval '3 hours');
+      values (v_id, 'new', 'under_review', 'مركز الاستقبال', 'تمت مراجعة البلاغ والتحقق من البيانات.', v_created + v_span * 0.1);
     end if;
     if v_status = 'rejected' then
       insert into public.complaint_status_history (complaint_id, old_status, new_status, changed_by_name, note, created_at)
-      values (v_id, 'under_review', 'rejected', 'مركز الاستقبال', 'البلاغ خارج نطاق صلاحيات البلدية.', v_created + interval '5 hours');
+      values (v_id, 'under_review', 'rejected', 'مركز الاستقبال', 'البلاغ خارج نطاق صلاحيات البلدية.', v_created + v_span * 0.3);
     end if;
     if v_status in ('assigned', 'in_progress', 'resolved', 'closed') then
       insert into public.complaint_status_history (complaint_id, old_status, new_status, changed_by, changed_by_name, note, created_at)
-      values (v_id, 'under_review', 'assigned', v_emp, 'مشرف القسم', 'تمت الإحالة إلى الموظف المختص.', v_created + interval '1 day');
+      values (v_id, 'under_review', 'assigned', v_emp, 'مشرف القسم', 'تمت الإحالة إلى الموظف المختص.', v_created + v_span * 0.3);
     end if;
     if v_status in ('in_progress', 'resolved', 'closed') then
       insert into public.complaint_status_history (complaint_id, old_status, new_status, changed_by, changed_by_name, note, created_at)
-      values (v_id, 'assigned', 'in_progress', v_emp, private.profile_name(v_emp), 'توجه الفريق الميداني إلى الموقع.', least(now() - interval '2 hours', v_created + interval '2 days'));
+      values (v_id, 'assigned', 'in_progress', v_emp, private.profile_name(v_emp), 'توجه الفريق الميداني إلى الموقع.', v_created + v_span * 0.6);
     end if;
     if v_status in ('resolved', 'closed') then
       insert into public.complaint_status_history (complaint_id, old_status, new_status, changed_by, changed_by_name, note, created_at)
@@ -194,18 +201,18 @@ begin
         select v_id, c.citizen_id,
                (array[5, 5, 4, 4, 5, 3, 2, 1, 4, 5])[1 + floor(random() * 10)::integer],
                v_comments[1 + floor(random() * array_length(v_comments, 1))::integer],
-               v_closed + interval '3 hours'
+               least(now() - interval '5 minutes', v_closed + interval '3 hours')
         from public.complaints c where c.id = v_id;
       end if;
     end if;
 
     if v_emp is not null and random() < 0.6 then
       insert into public.complaint_comments (complaint_id, author_id, body, created_at)
-      select v_id, c.citizen_id, 'هل يوجد موعد تقريبي للمعالجة؟', v_created + interval '1 day 4 hours' from public.complaints c where c.id = v_id;
+      select v_id, c.citizen_id, 'هل يوجد موعد تقريبي للمعالجة؟', v_created + v_span * 0.4 from public.complaints c where c.id = v_id;
       insert into public.complaint_comments (complaint_id, author_id, body, created_at)
-      values (v_id, v_emp, 'تمت جدولة الفريق الميداني خلال 48 ساعة.', v_created + interval '1 day 8 hours');
+      values (v_id, v_emp, 'تمت جدولة الفريق الميداني خلال 48 ساعة.', v_created + v_span * 0.45);
       insert into public.internal_notes (complaint_id, author_id, body, created_at)
-      values (v_id, v_emp, 'يحتاج الموقع إلى معدات إضافية، تم التنسيق مع المستودع.', v_created + interval '1 day 9 hours');
+      values (v_id, v_emp, 'يحتاج الموقع إلى معدات إضافية، تم التنسيق مع المستودع.', v_created + v_span * 0.5);
     end if;
   end loop;
 end

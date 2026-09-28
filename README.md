@@ -19,8 +19,11 @@
 | الترتيب | الملف | الوظيفة |
 |---|---|---|
 | 1 | `supabase/migrations/20260928000000_init.sql` | الجداول، الدوال، المشغلات، RLS، التخزين، Realtime |
-| 2 | `supabase/seed.sql` | البيانات الأساسية: الأقسام، أنواع المشاكل، المناطق، الكلمات المفتاحية |
-| 3 (اختياري) | `supabase/demo-data.sql` | حسابات وبلاغات تجريبية للاختبار فقط، **لا تستخدمه في النسخة الرسمية** |
+| 2 | `supabase/migrations/20260929000000_testing_fixes.sql` | إصلاحات مرحلة الاختبار الشامل (حماية تواريخ الحل + فهارس) |
+| 3 | `supabase/seed.sql` | البيانات الأساسية: الأقسام، أنواع المشاكل، المناطق، الكلمات المفتاحية |
+| 4 (اختياري) | `supabase/demo-data.sql` | حسابات وبلاغات تجريبية للاختبار فقط، **لا تستخدمه في النسخة الرسمية** |
+
+> إذا كنت نفّذت `init.sql` سابقاً، نفّذ ملف الإصلاحات (رقم 2) فقط. الملف آمن للتنفيذ أكثر من مرة.
 
 ### 3. اربط الواجهة بالمشروع
 من **Project Settings → API** انسخ **Project URL** و **anon / publishable key**، وضعهما في الملف `assets/js/config.js`:
@@ -105,6 +108,7 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 │   └── vendor/                    supabase-js و Leaflet (نسخ محلية)
 ├── supabase/
 │   ├── migrations/…_init.sql      قاعدة البيانات الكاملة
+│   ├── migrations/…_testing_fixes.sql  إصلاحات مرحلة الاختبار
 │   ├── seed.sql                   البيانات الأساسية
 │   └── demo-data.sql              بيانات تجريبية (اختياري)
 └── docs/                          التوثيق
@@ -116,3 +120,4 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 3. [نظام التصميم](docs/03-design-system.md)
 4. [المكونات والتخطيطات والتجاوب](docs/04-components-layouts-responsive.md)
 5. [الـ Backend: قاعدة البيانات والأمان والتحليلات](docs/05-backend-supabase.md)
+6. [تقرير الاختبار الشامل](docs/06-testing-report.md)
