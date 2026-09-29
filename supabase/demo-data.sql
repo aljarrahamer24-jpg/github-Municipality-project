@@ -100,18 +100,18 @@ begin
     v_cluster := case when i <= 6 then 1 when i <= 11 then 2 when i <= 15 then 3 else 0 end;
     if v_cluster = 1 then
       select * into v_cat from public.problem_categories where name = 'حفر في الطرق';
-      select * into v_area from public.areas where name = 'حي الجامعة';
-      v_lat := 32.5392 + (random() - 0.5) * 0.0008; v_lng := 35.8455 + (random() - 0.5) * 0.0008;
+      select * into v_area from public.areas where name = 'النصر';
+      v_lat := 31.5258 + (random() - 0.5) * 0.0008; v_lng := 34.4563 + (random() - 0.5) * 0.0008;
       v_days := 5 + floor(random() * 110)::integer;
     elsif v_cluster = 2 then
       select * into v_cat from public.problem_categories where name = 'تجمع مياه الأمطار';
-      select * into v_area from public.areas where name = 'وسط البلد';
-      v_lat := 32.5556 + (random() - 0.5) * 0.0008; v_lng := 35.8502 + (random() - 0.5) * 0.0008;
+      select * into v_area from public.areas where name = 'الرمال';
+      v_lat := 31.5215 + (random() - 0.5) * 0.0008; v_lng := 34.4440 + (random() - 0.5) * 0.0008;
       v_days := 20 + floor(random() * 150)::integer;
     elsif v_cluster = 3 then
       select * into v_cat from public.problem_categories where name = 'انسداد صرف صحي';
-      select * into v_area from public.areas where name = 'الحي الشرقي';
-      v_lat := 32.5519 + (random() - 0.5) * 0.0008; v_lng := 35.8715 + (random() - 0.5) * 0.0008;
+      select * into v_area from public.areas where name = 'الزيتون';
+      v_lat := 31.4935 + (random() - 0.5) * 0.0008; v_lng := 34.4580 + (random() - 0.5) * 0.0008;
       v_days := 3 + floor(random() * 80)::integer;
     else
       select * into v_cat from public.problem_categories order by random() limit 1;
@@ -228,7 +228,7 @@ select 'منخفض جوي وأمطار غزيرة', 'rain', 'high',
        'يتوقع هطول أمطار غزيرة مصحوبة بعواصف رعدية وتشكل سيول في المناطق المنخفضة.',
        date_trunc('day', now()) + interval '4 days', date_trunc('day', now()) + interval '6 days',
        '45 ملم', '55 كم/س', '12° — 18°',
-       '[{"text": "تنظيف مناهل تصريف الأمطار في وسط البلد", "done": true},
+       '[{"text": "تنظيف مناهل تصريف الأمطار في الرمال", "done": true},
          {"text": "تجهيز مضخات الشفط الاحتياطية", "done": true},
          {"text": "رفع جاهزية فرق الطوارئ", "done": false},
          {"text": "إغلاق النفق عند ارتفاع المنسوب", "done": false},
@@ -237,7 +237,7 @@ where not exists (select 1 from public.weather_events);
 
 insert into public.weather_event_areas (event_id, area_id)
 select e.id, a.id from public.weather_events e, public.areas a
-where a.name in ('وسط البلد', 'حي الروضة', 'الحي الشرقي')
+where a.name in ('الرمال', 'الشيخ رضوان', 'الزيتون')
 on conflict do nothing;
 
 -- تنظيف إشعارات الإنشاء التجريبية وإضافة عدد بسيط منها

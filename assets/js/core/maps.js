@@ -20,7 +20,14 @@ const Maps = (() => {
     iconAnchor: [17, 43],
   })
 
-  function base(el, center = APP_CONFIG.MAP_CENTER, zoom = APP_CONFIG.MAP_ZOOM) {
+  // مركز الخريطة الافتراضي: متوسط مواقع المناطق المسجلة في قاعدة البيانات (وإلا MAP_CENTER من config.js)
+  let defaultCenter = null
+  function useAreasCenter(areas) {
+    const pts = (areas || []).filter((a) => a.latitude != null && a.longitude != null)
+    if (pts.length) defaultCenter = [pts.reduce((s, a) => s + a.latitude, 0) / pts.length, pts.reduce((s, a) => s + a.longitude, 0) / pts.length]
+  }
+
+  function base(el, center = defaultCenter || APP_CONFIG.MAP_CENTER, zoom = APP_CONFIG.MAP_ZOOM) {
     el.classList.add('map')
     const map = L.map(el, { center, zoom, scrollWheelZoom: false, attributionControl: true })
     const layer = L.tileLayer(TILES, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map)
@@ -41,7 +48,7 @@ const Maps = (() => {
   }
 
   function picker(el, onPick, center) {
-    const map = base(el, center || APP_CONFIG.MAP_CENTER)
+    const map = base(el, center || defaultCenter || APP_CONFIG.MAP_CENTER)
     let marker = null
     const set = (latlng, fly) => {
       if (!marker) {
@@ -89,7 +96,7 @@ const Maps = (() => {
   }
 
   function risk(el, areas) {
-    const map = base(el, APP_CONFIG.MAP_CENTER, 13)
+    const map = base(el, defaultCenter || APP_CONFIG.MAP_CENTER, 13)
     const color = { high: '#dc2626', medium: '#d97706', low: '#16a34a' }
     const pts = []
     areas.forEach((a) => {
@@ -118,5 +125,5 @@ const Maps = (() => {
     return bestD <= maxMeters ? best : null
   }
 
-  return { location, picker, complaints, risk, nearestArea }
+  return { location, picker, complaints, risk, nearestArea, useAreasCenter }
 })()

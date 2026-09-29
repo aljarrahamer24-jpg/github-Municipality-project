@@ -105,7 +105,12 @@
                     <label class="label" for="district">المنطقة / الحي<span class="req">*</span></label>
                     <select class="select" id="district"></select>
                     <p class="error-text">اختر المنطقة</p>
-                    <p class="hint c-warning" id="area-far" hidden>الموقع المحدد بعيد عن مناطق البلدية المسجلة. تأكد من مكان الدبوس أو اختر المنطقة يدوياً.</p>
+                    <p class="hint c-warning" id="area-far" hidden>الموقع المحدد بعيد عن المناطق المسجلة. تأكد من مكان الدبوس، أو اختر "منطقتي غير موجودة" واكتب اسمها.</p>
+                  </div>
+                  <div class="field" id="district-other-field" hidden>
+                    <label class="label" for="district-other">اسم منطقتك / حيّك<span class="req">*</span></label>
+                    <input class="input" id="district-other" maxlength="100" placeholder="مثال: حي الصفطاوي">
+                    <p class="error-text">اكتب اسم المنطقة</p>
                   </div>
                   <div class="field">
                     <label class="label" for="landmark">العنوان / أقرب معلم</label>

@@ -29,6 +29,11 @@ App.page({ roles: ['citizen'] }, async () => {
   })
 
   fillSelect(district, areas.map((a) => [a.id, a.name]), { placeholder: 'اختر المنطقة' })
+  // إذا لم تكن منطقة المواطن ضمن القائمة يكتبها بنفسه (تُحفظ ضمن العنوان، والبلاغ بدون ربط بمنطقة مسجلة)
+  district.insertAdjacentHTML('beforeend', '<option value="__other">منطقتي غير موجودة — سأكتبها</option>')
+  const districtOther = $('#district-other')
+  const otherArea = () => (district.value === '__other' ? districtOther.value.trim() : '')
+  Maps.useAreasCenter(areas)
 
   // الخريطة تُنشأ عند الوصول لخطوة الموقع (حتى تأخذ مقاسها الصحيح)
   let picker = null
@@ -50,7 +55,12 @@ App.page({ roles: ['citizen'] }, async () => {
     picker = Maps.picker($('#picker'), onPick)
     if (s.pos) picker.set([s.pos.lat, s.pos.lng]) // موقع GPS الذي حُدد من البلاغ السريع
   }
-  district.addEventListener('change', () => (district.dataset.manual = '1'))
+  district.addEventListener('change', () => {
+    district.dataset.manual = '1'
+    $('#district-other-field').hidden = district.value !== '__other'
+    if (district.value === '__other') districtOther.focus()
+  })
+  districtOther.addEventListener('input', paint)
 
   $('#locate').addEventListener('click', (e) => {
     ensureMap()
@@ -84,7 +94,8 @@ App.page({ roles: ['citizen'] }, async () => {
   desc.addEventListener('input', () => ($('#desc-count').textContent = desc.value.length))
   ;[title, desc, district, landmark].forEach((el) => el.addEventListener('input', paint))
 
-  const valid = () => [!!s.cat, title.value.trim().length >= 5 && desc.value.trim().length >= 15, !!s.pos && !!district.value, true]
+  const areaOk = () => !!district.value && (district.value !== '__other' || otherArea().length >= 2)
+  const valid = () => [!!s.cat, title.value.trim().length >= 5 && desc.value.trim().length >= 15, !!s.pos && areaOk(), true]
   const catObj = () => categories.find((c) => c.id === s.cat)
 
   function showErrors() {
@@ -96,6 +107,7 @@ App.page({ roles: ['citizen'] }, async () => {
     if (s.step === 2) {
       $('#pos-field').classList.toggle('is-invalid', !s.pos)
       district.closest('.field').classList.toggle('is-invalid', !district.value)
+      $('#district-other-field').classList.toggle('is-invalid', district.value === '__other' && otherArea().length < 2)
     }
   }
 
@@ -109,7 +121,7 @@ App.page({ roles: ['citizen'] }, async () => {
     $('#next').innerHTML = s.step === 3 ? `إرسال البلاغ${icon('send')}` : `التالي${icon('arrow-left')}`
 
     const cat = catObj()
-    const dist = areas.find((d) => d.id === district.value)
+    const dist = areas.find((d) => d.id === district.value) || (otherArea() ? { name: otherArea() } : null)
     const summary = [
       ['النوع', cat?.name],
       ['القسم', cat?.department?.name],
@@ -246,8 +258,8 @@ App.page({ roles: ['citizen'] }, async () => {
               description: desc.value.trim(),
               latitude: s.pos.lat,
               longitude: s.pos.lng,
-              areaId: district.value,
-              address: landmark.value.trim(),
+              areaId: district.value === '__other' ? null : district.value,
+              address: [otherArea() && `المنطقة: ${otherArea()}`, landmark.value.trim()].filter(Boolean).join(' — '),
             },
             uploader.getFiles(),
           ),

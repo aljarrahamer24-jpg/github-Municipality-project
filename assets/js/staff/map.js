@@ -2,6 +2,7 @@
 App.page({ roles: ['employee', 'admin'] }, async () => {
   const f = { cat: '', dist: '', status: '', period: $('#f-period').value, mode: 'both' }
   const [categories, areas] = await Promise.all([API.categories({ activeOnly: false }), API.areas()])
+  Maps.useAreasCenter(areas)
   fillSelect($('#f-cat'), categories.map((c) => [c.id, c.name]), { placeholder: 'الكل' })
   fillSelect($('#f-dist'), areas.map((a) => [a.id, a.name]), { placeholder: 'كل المناطق' })
   fillSelect($('#f-status'), Object.entries(STATUS_LABELS), { placeholder: 'كل الحالات' })

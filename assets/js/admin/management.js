@@ -212,7 +212,8 @@ App.page({ roles: ['admin'] }, async ({ profile: me }) => {
         ),
       afterOpen: (m, d) => {
         const f = $('[data-form]', m).elements
-        const center = d?.latitude != null ? [d.latitude, d.longitude] : APP_CONFIG.MAP_CENTER
+        Maps.useAreasCenter(state.rows)
+        const center = d?.latitude != null ? [d.latitude, d.longitude] : null
         const pk = Maps.picker($('[data-area-map]', m), (ll) => {
           f.latitude.value = ll.lat.toFixed(6)
           f.longitude.value = ll.lng.toFixed(6)
