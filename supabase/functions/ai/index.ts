@@ -3,7 +3,7 @@
 //  ---------------------------------------------------------------------------
 //  يُنشر من لوحة Supabase مباشرة (بدون أي أداة على جهازك):
 //    Edge Functions → Deploy a new function → Via Editor → الاسم: ai → الصق هذا الملف → Deploy
-//  الإعدادات السرية: Edge Functions → Secrets → GEMINI_API_KEY
+//  الإعدادات السرية: Edge Functions → Secrets → OPENROUTER_API_KEY (أو GEMINI_API_KEY)
 //  التفاصيل: docs/07-ai-layer.md
 //
 //  POST /functions/v1/ai   (يتطلب تسجيل الدخول — Authorization: Bearer <JWT>)
@@ -16,7 +16,7 @@
 //  مفتاح المزوّد في Secrets فقط ولا يصل للمتصفح أبداً.
 //
 //  الأقسام:
-//    1. واجهة المزوّد (Provider abstraction)   2. مزوّد Gemini
+//    1. واجهة المزوّد (Provider abstraction)   2. مزوّد Gemini   2ب. مزوّد OpenRouter
 //    3. الوصول لقاعدة البيانات (RLS)            4. فهم البلاغ (صورة / نص)
 //    5. نقطة الدخول والإجراءات
 // ============================================================================
@@ -70,16 +70,18 @@ class AIError extends Error {
   }
 }
 
+// المزوّد يُختار من AI_PROVIDER، أو تلقائياً حسب المفتاح الموجود في Secrets
 function getProvider(): AIProvider {
-  const name = (Deno.env.get('AI_PROVIDER') || 'gemini').toLowerCase()
+  const name = (Deno.env.get('AI_PROVIDER') || (Deno.env.get('OPENROUTER_API_KEY') && !Deno.env.get('GEMINI_API_KEY') ? 'openrouter' : 'gemini')).toLowerCase()
   switch (name) {
     case 'gemini':
       return createGeminiProvider()
+    case 'openrouter':
+      return createOpenRouterProvider()
     default:
       throw new AIError('مزوّد الذكاء الاصطناعي غير مدعوم في الإعدادات', 500, 'ai_misconfigured')
   }
 }
-
 
 // ============================================================================
 //  2. مزوّد Google Gemini
@@ -170,6 +172,99 @@ function createGeminiProvider(): AIProvider {
         systemInstruction: { parts: [{ text: req.system }] },
         contents: [{ role: 'user', parts: toParts(req.parts) }],
         generationConfig: { temperature: req.temperature ?? 0.3, maxOutputTokens: req.maxOutputTokens ?? 1536 },
+      })
+    },
+  }
+}
+
+
+// ============================================================================
+//  2ب. مزوّد OpenRouter (واجهة متوافقة مع OpenAI — يتيح نماذج مجانية كثيرة)
+//  المتغيرات: OPENROUTER_API_KEY (مطلوب، سرّي) · OPENROUTER_MODEL (اختياري) · OPENROUTER_BASE_URL (اختياري)
+//  النموذج الافتراضي openrouter/free: يختار تلقائياً نموذجاً مجانياً يدعم الصور والمخرجات المنظمة.
+// ============================================================================
+
+const OR_DEFAULT_MODEL = 'openrouter/free'
+const OR_DEFAULT_BASE = 'https://openrouter.ai/api/v1'
+
+// استخراج JSON حتى لو أحاطه النموذج بنص أو ```json
+function extractJSON(text: string): unknown {
+  const t = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim()
+  try {
+    return JSON.parse(t)
+  } catch { /* نحاول إيجاد أول كائن */ }
+  const a = t.indexOf('{')
+  const b = t.lastIndexOf('}')
+  if (a !== -1 && b > a) {
+    try {
+      return JSON.parse(t.slice(a, b + 1))
+    } catch { /* غير صالح */ }
+  }
+  throw new AIError('نتيجة غير صالحة من خدمة الذكاء الاصطناعي.', 502, 'ai_bad_output')
+}
+
+function createOpenRouterProvider(): AIProvider {
+  const apiKey = Deno.env.get('OPENROUTER_API_KEY')
+  const model = Deno.env.get('OPENROUTER_MODEL') || OR_DEFAULT_MODEL
+  const base = (Deno.env.get('OPENROUTER_BASE_URL') || OR_DEFAULT_BASE).replace(/\/+$/, '')
+  if (!apiKey) throw new AIError('لم يتم إعداد مفتاح خدمة الذكاء الاصطناعي بعد (OPENROUTER_API_KEY).', 503, 'ai_not_configured')
+
+  const toContent = (parts: AIPart[]) =>
+    parts.map((p) => (p.type === 'text' ? { type: 'text', text: p.text } : { type: 'image_url', image_url: { url: `data:${p.mimeType};base64,${p.base64}` } }))
+
+  async function call(body: Record<string, unknown>): Promise<string> {
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
+    let res: Response
+    try {
+      res = await fetch(`${base}/chat/completions`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}`, 'x-title': 'Municipality Complaints Platform' },
+        body: JSON.stringify({ model, ...body }),
+        signal: ctrl.signal,
+      })
+    } catch (e) {
+      throw new AIError(e instanceof DOMException && e.name === 'AbortError' ? 'استغرقت خدمة الذكاء الاصطناعي وقتاً طويلاً. حاول مجدداً.' : 'تعذر الاتصال بخدمة الذكاء الاصطناعي.', 504, 'ai_unreachable')
+    } finally {
+      clearTimeout(timer)
+    }
+    if (res.status === 429) throw new AIError('تم تجاوز الحد المجاني لخدمة الذكاء الاصطناعي مؤقتاً. حاول بعد قليل أو أكمل يدوياً.', 429, 'ai_quota')
+    if (res.status === 401 || res.status === 402 || res.status === 403 || res.status === 404 || res.status === 400) {
+      console.error('openrouter error', res.status, (await res.text()).slice(0, 500))
+      throw new AIError(res.status === 402 ? 'رصيد خدمة الذكاء الاصطناعي غير كافٍ لهذا النموذج. استخدم نموذجاً مجانياً.' : 'إعدادات خدمة الذكاء الاصطناعي غير صحيحة (المفتاح أو اسم النموذج).', 502, 'ai_misconfigured')
+    }
+    if (!res.ok) throw new AIError('خدمة الذكاء الاصطناعي غير متاحة حالياً.', 502, 'ai_unavailable')
+    const data = await res.json()
+    if (data?.error) {
+      console.error('openrouter error body', JSON.stringify(data.error).slice(0, 500))
+      throw new AIError(data.error.code === 429 ? 'تم تجاوز الحد المجاني لخدمة الذكاء الاصطناعي مؤقتاً.' : 'خدمة الذكاء الاصطناعي غير متاحة حالياً.', data.error.code === 429 ? 429 : 502, 'ai_unavailable')
+    }
+    const text = data?.choices?.[0]?.message?.content
+    if (typeof text !== 'string' || !text.trim()) throw new AIError('لم تُرجع خدمة الذكاء الاصطناعي نتيجة.', 502, 'ai_empty')
+    return text
+  }
+
+  return {
+    name: 'openrouter',
+    model,
+    async generateJSON(req: GenerateJSONRequest) {
+      // المخطط يُرسل كـ response_format ويُذكر أيضاً في التعليمات (بعض النماذج المجانية لا تدعم المخرجات المنظمة)
+      const text = await call({
+        messages: [
+          { role: 'system', content: `${req.system}\n\nأجب بكائن JSON فقط مطابق لهذا المخطط، بدون أي نص آخر:\n${JSON.stringify(req.schema)}` },
+          { role: 'user', content: toContent(req.parts) },
+        ],
+        response_format: { type: 'json_schema', json_schema: { name: 'result', strict: true, schema: { ...req.schema, required: Object.keys(req.schema.properties || {}), additionalProperties: false } } },
+        temperature: req.temperature ?? 0.2,
+        max_tokens: req.maxOutputTokens ?? 1024,
+      })
+      return extractJSON(text)
+    },
+    async generateText(req: GenerateTextRequest) {
+      return await call({
+        messages: [{ role: 'system', content: req.system }, { role: 'user', content: toContent(req.parts) }],
+        temperature: req.temperature ?? 0.3,
+        max_tokens: req.maxOutputTokens ?? 1536,
       })
     },
   }
@@ -297,7 +392,10 @@ const clean = (v: unknown, max: number) =>
 function validateSuggestion(raw: unknown, categories: Category[]): ComplaintSuggestion {
   if (!raw || typeof raw !== 'object') throw new AIError('نتيجة غير صالحة من خدمة الذكاء الاصطناعي.', 502, 'ai_bad_output')
   const r = raw as Record<string, unknown>
-  const cat = categories.find((c) => c.name === r.category) || null
+  // مطابقة تامة أولاً، ثم مرنة (بعض النماذج المجانية تضيف مسافات أو نصاً حول الاسم)
+  const norm = (x: unknown) => String(x ?? '').replace(/[\s‏‎"«»]/g, '').trim()
+  const got = norm(r.category)
+  const cat = categories.find((c) => c.name === r.category) || (got ? categories.find((c) => got.includes(norm(c.name)) || norm(c.name).includes(got)) : null) || null
   const urgency = URGENCY.includes(r.urgency as typeof URGENCY[number]) ? (r.urgency as ComplaintSuggestion['urgency']) : 'medium'
   const conf = Number(r.confidence)
   return {
