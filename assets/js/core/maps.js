@@ -9,9 +9,9 @@
    ========================================================================== */
 
 const Maps = (() => {
-  const TILES = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
-  // خادم بديل إذا تعذر تحميل صور الخريطة من الخادم الأساسي (حتى لا تظهر الخريطة بيضاء)
-  const TILES_FALLBACK = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+  // خرائط OpenStreetMap المجانية (بدون مفتاح). البديل يُستخدم تلقائياً إذا تعذر تحميل الأساسي
+  const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+  const TILES_FALLBACK = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
 
   const pin = L.divIcon({
     className: '',
@@ -23,14 +23,10 @@ const Maps = (() => {
   function base(el, center = APP_CONFIG.MAP_CENTER, zoom = APP_CONFIG.MAP_ZOOM) {
     el.classList.add('map')
     const map = L.map(el, { center, zoom, scrollWheelZoom: false, attributionControl: true })
-    const layer = L.tileLayer(TILES, { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }).addTo(map)
+    const layer = L.tileLayer(TILES, { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map)
     let errors = 0
     layer.on('tileerror', () => {
-      if (++errors === 4) {
-        layer.setUrl(TILES_FALLBACK)
-        map.attributionControl.removeAttribution('© OpenStreetMap © CARTO')
-        map.attributionControl.addAttribution('© OpenStreetMap')
-      }
+      if (++errors === 4) layer.setUrl(TILES_FALLBACK)
     })
     map.attributionControl.setPrefix('')
     // إذا أُنشئت الخريطة داخل عنصر كان مخفياً، نعيد حساب المقاس عند ظهوره

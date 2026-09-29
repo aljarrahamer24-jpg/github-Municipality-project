@@ -57,14 +57,25 @@ App.page({ roles: ['citizen'] }, async () => {
     if (!navigator.geolocation) return toast('المتصفح لا يدعم تحديد الموقع، حدده على الخريطة يدوياً.', 'error')
     const btn = e.currentTarget
     btn.disabled = true
+    toast('جارٍ تحديد موقعك...', 'info')
     navigator.geolocation.getCurrentPosition(
       (p) => {
         btn.disabled = false
         picker.set([p.coords.latitude, p.coords.longitude])
+        const acc = p.coords.accuracy
+        // أجهزة اللابتوب غالباً بدون GPS: الموقع تقديري من الإنترنت وقد يبعد كيلومترات
+        acc > 300
+          ? toast(`تم تحديد موقعك لكنه تقريبي (بدقة ${acc >= 1000 ? Math.round(acc / 1000) + ' كم' : Math.round(acc) + ' م'} تقريباً). اضغط على الخريطة أو اسحب الدبوس لمكان المشكلة بالضبط.`, 'info')
+          : toast('تم تحديد موقعك الحالي')
       },
-      () => {
+      (err) => {
         btn.disabled = false
-        toast('تعذر تحديد موقعك الحالي. اسمح للمتصفح بالوصول للموقع أو حدده على الخريطة.', 'error')
+        toast(
+          err.code === 1
+            ? 'لم يُسمح للموقع باستخدام موقعك. اضغط على أيقونة القفل بجانب رابط الصفحة واسمح بالوصول للموقع، أو حدده على الخريطة.'
+            : 'تعذر تحديد موقعك الحالي. حدده على الخريطة بالضغط على مكان المشكلة.',
+          'error',
+        )
       },
       { enableHighAccuracy: true, timeout: 10000 },
     )
