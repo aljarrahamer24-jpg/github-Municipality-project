@@ -17,18 +17,20 @@
 المتصفح (assets/js/core/ai.js)
    │  sb.functions.invoke('ai', { action, ... })   ← لا مفاتيح في المتصفح
    ▼
-Supabase Edge Function  (supabase/functions/ai/index.ts — TypeScript)
-   │  1. التحقق من الجلسة والدور        (_shared/db.ts)
+Supabase Edge Function  (supabase/functions/ai/index.ts — ملف واحد يعمل على خوادم Supabase)
+   │  1. التحقق من الجلسة والدور        (القسم 3)
    │  2. حد الطلبات لكل مستخدم           (ai_begin_request)
    │  3. التحقق من المدخلات
-   │  4. المهمة                          (_shared/ai/complaint.ts)
-   │  5. المزوّد عبر واجهة موحدة          (_shared/ai/provider.ts → gemini.ts)
+   │  4. المهمة: فهم البلاغ              (القسم 4)
+   │  5. المزوّد عبر واجهة موحدة          (القسم 1 → القسم 2: Gemini)
    │  6. التحقق من المخرجات وحفظها        (ai_analyses)
    ▼
 قاعدة البيانات (بصلاحيات المستخدم نفسه عبر RLS — بدون Service Role)
 ```
 
-- **تغيير المزوّد مستقبلاً:** أضف ملفاً ينفّذ الواجهة `AIProvider` داخل `_shared/ai/`، ثم اضبط المتغير `AI_PROVIDER`. لا حاجة لتعديل الواجهة أو الميزات.
+الدالة ملف واحد مقسّم إلى أقسام واضحة، حتى تُنشر بالنسخ واللصق من لوحة Supabase بدون أي أداة على جهازك.
+
+- **تغيير المزوّد مستقبلاً:** أضف تنفيذاً جديداً للواجهة `AIProvider` في القسم 2 من الملف، وسجّله في `getProvider()`، ثم اضبط المتغير `AI_PROVIDER`. لا حاجة لتعديل الواجهة أو الميزات.
 - **الإدخال الصوتي:** يتم في المتصفح عبر Web Speech API، وهو مجاني ولا يحتاج مفتاحاً. يعمل في Chrome وEdge. إذا لم يدعمه المتصفح، يكتب المواطن النص بنفسه.
 
 ## 7.2 المرحلة 1 (منفّذة): البلاغ الذكي + كشف التكرار
@@ -57,18 +59,20 @@ Supabase Edge Function  (supabase/functions/ai/index.ts — TypeScript)
 | `confirm_duplicate()` | تسجيل المساهمة | تعيد التحقق من المسافة في الخادم، وتمنع تأكيد بلاغك أو بلاغ مغلق |
 | `app_settings.ai` | `enabled`، `max_requests_per_hour`، `duplicate_radius_m` | المدير |
 
-## 7.3 الإعداد في مشروعك (مرة واحدة)
+## 7.3 الإعداد في مشروعك (مرة واحدة — كله من المتصفح)
+
+لا تحتاج تثبيت أي برنامج. المشروع يبقى HTML و CSS و JavaScript، والدالة تعمل على خوادم Supabase.
 
 1. **قاعدة البيانات:** نفّذ `supabase/migrations/20260930000000_ai_phase1.sql` في SQL Editor.
-2. **مفتاح Gemini المجاني:** من [Google AI Studio](https://aistudio.google.com/app/apikey) اضغط **Create API key**. لا تضعه في أي ملف داخل المشروع.
-3. **نشر الدالة:** يحتاج [Node.js](https://nodejs.org) على جهازك لتشغيل أداة Supabase فقط، وليس كخادم للمشروع. نفّذ في Terminal داخل مجلد المشروع:
-   ```bash
-   npx supabase login
-   npx supabase link --project-ref lrlriimsfscgritbcqjs
-   npx supabase secrets set GEMINI_API_KEY=ضع_المفتاح_هنا
-   npx supabase functions deploy ai --no-verify-jwt
-   ```
-   الخيار `--no-verify-jwt` لا يلغي الحماية: الدالة نفسها تتحقق من الجلسة عبر Supabase Auth في كل طلب. هذا الخيار مطلوب لتعمل مع المفاتيح الجديدة (publishable).
+2. **مفتاح Gemini المجاني:** من [Google AI Studio](https://aistudio.google.com/app/apikey) اضغط **Create API key** وانسخ المفتاح. لا تضعه في أي ملف داخل المشروع.
+3. **حفظ المفتاح في Supabase:** من لوحة مشروعك افتح **Edge Functions** ثم **Secrets** ثم **Add new secret**. الاسم: `GEMINI_API_KEY`، والقيمة: المفتاح. ثم احفظ.
+4. **نشر الدالة:**
+   - افتح **Edge Functions** ثم **Deploy a new function** ثم **Via Editor**.
+   - اكتب اسم الدالة: `ai`، بالحروف الصغيرة تماماً.
+   - احذف الكود الموجود في المحرر، والصق محتوى الملف `supabase/functions/ai/index.ts` كاملاً.
+   - اضغط **Deploy function**.
+5. **إعداد التحقق:** من صفحة الدالة `ai` افتح **Details** أو **Settings**، وأطفئ **Enforce JWT Verification** ثم احفظ.
+   هذا لا يلغي الحماية، لأن الدالة نفسها تتحقق من تسجيل دخول المستخدم عبر Supabase Auth في كل طلب. هذا الإعداد مطلوب لتعمل مع المفاتيح الجديدة (publishable).
 
 | المتغير | مطلوب؟ | الوصف |
 |---|---|---|

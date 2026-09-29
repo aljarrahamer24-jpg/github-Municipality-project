@@ -58,7 +58,7 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 3. سجّل الدخول، وستظهر لوحة المدير. بعدها يمكنك إضافة الموظفين وترقية الحسابات من لوحة المدير مباشرة.
 
 ### 7. تفعيل الذكاء الاصطناعي (اختياري)
-المشروع يعمل كاملاً بدونه. لتفعيله: مفتاح Gemini مجاني + نشر الدالة `ai`. الخطوات في [docs/07-ai-layer.md](docs/07-ai-layer.md#73-الإعداد-في-مشروعك-مرة-واحدة).
+المشروع يعمل كاملاً بدونه. لتفعيله من المتصفح فقط (بدون تثبيت أي برنامج): مفتاح Gemini مجاني + لصق الدالة `ai` في لوحة Supabase. الخطوات في [docs/07-ai-layer.md](docs/07-ai-layer.md#73-الإعداد-في-مشروعك-مرة-واحدة).
 
 ### حسابات تجريبية (إذا نفّذت `demo-data.sql`)
 كلمة المرور لجميع الحسابات: `Demo@12345`
@@ -113,8 +113,7 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 │   │   ├── public/ auth/ citizen/ employee/ staff/ admin/   ملف لكل صفحة
 │   └── vendor/                    supabase-js و Leaflet (نسخ محلية)
 ├── supabase/
-│   ├── functions/ai/              Edge Function للذكاء الاصطناعي (TypeScript)
-│   ├── functions/_shared/         طبقة المزوّد (Gemini) والوصول لقاعدة البيانات
+│   ├── functions/ai/index.ts      دالة الذكاء الاصطناعي (تُلصق في لوحة Supabase — ملف واحد)
 │   ├── migrations/…_init.sql      قاعدة البيانات الكاملة
 │   ├── migrations/…_testing_fixes.sql  إصلاحات مرحلة الاختبار
 │   ├── seed.sql                   البيانات الأساسية
