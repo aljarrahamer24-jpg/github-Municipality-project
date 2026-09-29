@@ -212,7 +212,15 @@ function createOpenRouterProvider(): AIProvider {
   const toContent = (parts: AIPart[]) =>
     parts.map((p) => (p.type === 'text' ? { type: 'text', text: p.text } : { type: 'image_url', image_url: { url: `data:${p.mimeType};base64,${p.base64}` } }))
 
-  async function call(body: Record<string, unknown>): Promise<string> {
+  // نص الرد: string أو مصفوفة أجزاء (حسب النموذج)
+  const contentOf = (msg: Record<string, unknown> | undefined): string => {
+    const c = msg?.content
+    if (typeof c === 'string') return c
+    if (Array.isArray(c)) return c.map((x) => (typeof x === 'string' ? x : (x as { text?: string })?.text || '')).join('')
+    return ''
+  }
+
+  async function once(body: Record<string, unknown>, jsonMode: boolean): Promise<string> {
     const ctrl = new AbortController()
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
     let res: Response
@@ -220,7 +228,8 @@ function createOpenRouterProvider(): AIProvider {
       res = await fetch(`${base}/chat/completions`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: `Bearer ${apiKey}`, 'x-title': 'Municipality Complaints Platform' },
-        body: JSON.stringify({ model, ...body }),
+        // reasoning منخفض: نماذج "التفكير" المجانية قد تستهلك الرد كله في التفكير وتعيد إجابة فارغة
+        body: JSON.stringify({ model, reasoning: { effort: 'low', exclude: true }, ...body }),
         signal: ctrl.signal,
       })
     } catch (e) {
@@ -239,9 +248,29 @@ function createOpenRouterProvider(): AIProvider {
       console.error('openrouter error body', JSON.stringify(data.error).slice(0, 500))
       throw new AIError(data.error.code === 429 ? 'تم تجاوز الحد المجاني لخدمة الذكاء الاصطناعي مؤقتاً.' : 'خدمة الذكاء الاصطناعي غير متاحة حالياً.', data.error.code === 429 ? 429 : 502, 'ai_unavailable')
     }
-    const text = data?.choices?.[0]?.message?.content
-    if (typeof text !== 'string' || !text.trim()) throw new AIError('لم تُرجع خدمة الذكاء الاصطناعي نتيجة.', 502, 'ai_empty')
+    const choice = data?.choices?.[0]
+    let text = contentOf(choice?.message)
+    // بعض نماذج التفكير تضع JSON داخل حقل reasoning فقط
+    if (!text.trim() && jsonMode && typeof choice?.message?.reasoning === 'string' && choice.message.reasoning.includes('{')) text = choice.message.reasoning
+    if (!text.trim()) {
+      console.error('openrouter empty', JSON.stringify({ model: data?.model, finish: choice?.finish_reason, native: choice?.native_finish_reason }))
+      throw new AIError('لم تُرجع خدمة الذكاء الاصطناعي نتيجة.', 502, 'ai_empty')
+    }
     return text
+  }
+
+  // إعادة المحاولة عند الرد الفارغ أو غير الصالح (openrouter/free يختار نموذجاً مختلفاً في كل مرة)
+  async function call<T>(body: Record<string, unknown>, parse: (t: string) => T, jsonMode = false): Promise<T> {
+    let last: unknown
+    for (let i = 0; i < 3; i++) {
+      try {
+        return parse(await once(body, jsonMode))
+      } catch (e) {
+        last = e
+        if (!(e instanceof AIError) || !['ai_empty', 'ai_bad_output'].includes(e.code)) throw e
+      }
+    }
+    throw last
   }
 
   return {
@@ -249,23 +278,30 @@ function createOpenRouterProvider(): AIProvider {
     model,
     async generateJSON(req: GenerateJSONRequest) {
       // المخطط يُرسل كـ response_format ويُذكر أيضاً في التعليمات (بعض النماذج المجانية لا تدعم المخرجات المنظمة)
-      const text = await call({
-        messages: [
-          { role: 'system', content: `${req.system}\n\nأجب بكائن JSON فقط مطابق لهذا المخطط، بدون أي نص آخر:\n${JSON.stringify(req.schema)}` },
-          { role: 'user', content: toContent(req.parts) },
-        ],
-        response_format: { type: 'json_schema', json_schema: { name: 'result', strict: true, schema: { ...req.schema, required: Object.keys(req.schema.properties || {}), additionalProperties: false } } },
-        temperature: req.temperature ?? 0.2,
-        max_tokens: req.maxOutputTokens ?? 1024,
-      })
-      return extractJSON(text)
+      return await call(
+        {
+          messages: [
+            { role: 'system', content: `${req.system}\n\nأجب بكائن JSON فقط مطابق لهذا المخطط، بدون أي نص آخر:\n${JSON.stringify(req.schema)}` },
+            { role: 'user', content: toContent(req.parts) },
+          ],
+          response_format: { type: 'json_schema', json_schema: { name: 'result', strict: true, schema: { ...req.schema, required: Object.keys(req.schema.properties || {}), additionalProperties: false } } },
+          temperature: req.temperature ?? 0.2,
+          // مساحة كافية لنماذج التفكير قبل كتابة JSON
+          max_tokens: Math.max(req.maxOutputTokens ?? 0, 4000),
+        },
+        extractJSON,
+        true,
+      )
     },
     async generateText(req: GenerateTextRequest) {
-      return await call({
-        messages: [{ role: 'system', content: req.system }, { role: 'user', content: toContent(req.parts) }],
-        temperature: req.temperature ?? 0.3,
-        max_tokens: req.maxOutputTokens ?? 1536,
-      })
+      return await call(
+        {
+          messages: [{ role: 'system', content: req.system }, { role: 'user', content: toContent(req.parts) }],
+          temperature: req.temperature ?? 0.3,
+          max_tokens: Math.max(req.maxOutputTokens ?? 0, 4000),
+        },
+        (t) => t,
+      )
     },
   }
 }
