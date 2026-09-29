@@ -378,6 +378,7 @@ function initUploads(root = document) {
       add(e.dataTransfer.files)
     })
     box.getFiles = () => [...files]
+    box.addFiles = add
     box.clear = () => {
       files = []
       draw()

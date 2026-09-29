@@ -4,7 +4,8 @@
 
 - **الواجهة:** HTML + CSS + Vanilla JavaScript، بدون أي إطار عمل وبدون Node.js.
 - **الـ Backend الوحيد:** Supabase (Auth + PostgreSQL + Storage + Realtime + RLS).
-- **بدون ذكاء اصطناعي:** كل التحليلات مبنية على SQL وإحصاءات وقواعد منطقية وكلمات مفتاحية.
+- **التحليلات الأساسية بدون ذكاء اصطناعي:** مبنية على SQL وإحصاءات وقواعد منطقية وكلمات مفتاحية.
+- **طبقة ذكاء اصطناعي اختيارية فوق النظام:** البلاغ بالصورة أو النص أو الصوت، وكشف البلاغات المكررة، عبر Supabase Edge Function وGoogle Gemini. التفاصيل في [docs/07-ai-layer.md](docs/07-ai-layer.md).
 
 ---
 
@@ -21,7 +22,8 @@
 | 1 | `supabase/migrations/20260928000000_init.sql` | الجداول، الدوال، المشغلات، RLS، التخزين، Realtime |
 | 2 | `supabase/migrations/20260929000000_testing_fixes.sql` | إصلاحات مرحلة الاختبار الشامل (حماية تواريخ الحل + فهارس) |
 | 3 | `supabase/seed.sql` | البيانات الأساسية: الأقسام، أنواع المشاكل، المناطق، الكلمات المفتاحية |
-| 4 (اختياري) | `supabase/demo-data.sql` | حسابات وبلاغات تجريبية للاختبار فقط، **لا تستخدمه في النسخة الرسمية** |
+| 4 | `supabase/migrations/20260930000000_ai_phase1.sql` | طبقة الذكاء الاصطناعي (المرحلة 1): التحليلات، كشف التكرار، المساهمات |
+| 5 (اختياري) | `supabase/demo-data.sql` | حسابات وبلاغات تجريبية للاختبار فقط، **لا تستخدمه في النسخة الرسمية** |
 
 > إذا كنت نفّذت `init.sql` سابقاً، نفّذ ملف الإصلاحات (رقم 2) فقط. الملف آمن للتنفيذ أكثر من مرة.
 
@@ -54,6 +56,9 @@ update public.profiles set role = 'admin'
 where id = (select id from auth.users where email = 'your-email@example.com');
 ```
 3. سجّل الدخول، وستظهر لوحة المدير. بعدها يمكنك إضافة الموظفين وترقية الحسابات من لوحة المدير مباشرة.
+
+### 7. تفعيل الذكاء الاصطناعي (اختياري)
+المشروع يعمل كاملاً بدونه. لتفعيله: مفتاح Gemini مجاني + نشر الدالة `ai`. الخطوات في [docs/07-ai-layer.md](docs/07-ai-layer.md#73-الإعداد-في-مشروعك-مرة-واحدة).
 
 ### حسابات تجريبية (إذا نفّذت `demo-data.sql`)
 كلمة المرور لجميع الحسابات: `Demo@12345`
@@ -103,10 +108,13 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 │   │   │   ├── notifications.js   الإشعارات اللحظية (Realtime)
 │   │   │   ├── ui.js, utils.js    المكونات والأدوات
 │   │   │   ├── complaints-table.js  جدول البلاغات (بحث/فلاتر/ترتيب من الخادم)
+│   │   │   ├── ai.js              استدعاء خدمة الذكاء الاصطناعي + الصوت + كشف التكرار
 │   │   │   ├── charts.js, maps.js, icons.js
 │   │   ├── public/ auth/ citizen/ employee/ staff/ admin/   ملف لكل صفحة
 │   └── vendor/                    supabase-js و Leaflet (نسخ محلية)
 ├── supabase/
+│   ├── functions/ai/              Edge Function للذكاء الاصطناعي (TypeScript)
+│   ├── functions/_shared/         طبقة المزوّد (Gemini) والوصول لقاعدة البيانات
 │   ├── migrations/…_init.sql      قاعدة البيانات الكاملة
 │   ├── migrations/…_testing_fixes.sql  إصلاحات مرحلة الاختبار
 │   ├── seed.sql                   البيانات الأساسية
@@ -121,3 +129,4 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 4. [المكونات والتخطيطات والتجاوب](docs/04-components-layouts-responsive.md)
 5. [الـ Backend: قاعدة البيانات والأمان والتحليلات](docs/05-backend-supabase.md)
 6. [تقرير الاختبار الشامل](docs/06-testing-report.md)
+7. [طبقة الذكاء الاصطناعي](docs/07-ai-layer.md)

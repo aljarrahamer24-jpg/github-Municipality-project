@@ -1489,3 +1489,15 @@ body:not(.app-ready)::after {
   .report { border: 0; box-shadow: none; max-width: none; }
   .card { box-shadow: none; }
 }
+
+/* ---------- الذكاء الاصطناعي (المرحلة 1) ---------- */
+.ai-quick { padding: 16px; border: 1px solid var(--primary-100); border-radius: var(--r-lg); background: var(--primary-50); }
+.ai-quick .btn .icon { width: 18px; height: 18px; }
+#ai-mic.recording { border-color: var(--error-500); color: var(--error-600); background: var(--surface); }
+#ai-mic.recording .icon { animation: pulse-dot 1s ease-in-out infinite; }
+@keyframes pulse-dot { 50% { opacity: 0.35; } }
+.or-divider { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--ink-3); }
+.or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.dup-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-md); }
+.dup-item + .dup-item { margin-top: 8px; }
+.icon.spin { animation: spin 1s linear infinite; }

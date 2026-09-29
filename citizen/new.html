@@ -30,6 +30,30 @@
 
               <!-- الخطوة 1: نوع المشكلة -->
               <section class="step-pane stack" data-step="0">
+                <!-- البلاغ السريع بالذكاء الاصطناعي (اختياري — يمكن دائماً المتابعة يدوياً) -->
+                <div class="ai-quick" id="ai-quick">
+                  <div class="flex items-start gap-3">
+                    <span class="icon-box sm box-primary"><i data-icon="sparkles"></i></span>
+                    <div>
+                      <p class="fw-600">البلاغ السريع بالذكاء الاصطناعي</p>
+                      <p class="text-xs c-3 mt-1">صوّر المشكلة أو صفها بكلماتك (حتى بالعامية) وسنعبّئ البلاغ عنك، ثم تراجعه وتعدّله قبل الإرسال.</p>
+                    </div>
+                  </div>
+                  <div class="grid sm-cols-2 gap-2 mt-3">
+                    <button type="button" class="btn btn-primary" id="ai-photo"><i data-icon="camera"></i>صوّر المشكلة</button>
+                    <button type="button" class="btn btn-secondary" id="ai-mic"><i data-icon="mic"></i><span>تحدّث بالمشكلة</span></button>
+                  </div>
+                  <input type="file" id="ai-photo-input" accept="image/jpeg,image/png,image/webp" capture="environment" hidden>
+                  <div class="field mt-3">
+                    <textarea class="textarea" id="ai-text" rows="2" maxlength="1000" style="min-height:64px" placeholder="أو اكتب هنا، مثال: في حفرة كبيرة جنب المدرسة"></textarea>
+                  </div>
+                  <div class="flex wrap items-center justify-between gap-2">
+                    <p class="text-xs c-3" style="max-width:420px">تُرسل الصورة أو النص إلى خدمة ذكاء اصطناعي خارجية للتحليل فقط. الموقع يُؤخذ من GPS جهازك، وليس من الذكاء الاصطناعي.</p>
+                    <button type="button" class="btn btn-outline btn-sm" id="ai-analyze"><i data-icon="sparkles"></i>تحليل النص</button>
+                  </div>
+                  <div id="ai-status" class="mt-2" hidden></div>
+                </div>
+                <p class="or-divider"><span>أو اختر نوع المشكلة يدوياً</span></p>
                 <div>
                   <h2 class="fw-600">ما نوع المشكلة؟</h2>
                   <p class="text-sm c-3 mt-1">سيتم تحويل البلاغ تلقائياً للقسم المختص.</p>
@@ -93,6 +117,7 @@
               <!-- الخطوة 4: المراجعة -->
               <section class="step-pane stack" data-step="3" hidden>
                 <h2 class="fw-600">راجع بيانات البلاغ قبل الإرسال</h2>
+                <div id="ai-review" hidden></div>
                 <dl class="review" id="review"></dl>
                 <label class="check"><input type="checkbox" checked> أتعهد بصحة المعلومات المقدمة</label>
                 <label class="check"><input type="checkbox" checked> أرغب باستلام إشعارات عبر الرسائل النصية</label>
@@ -154,6 +179,7 @@
   <script src="../assets/js/core/app.js"></script>
   <script src="../assets/vendor/leaflet/leaflet.js"></script>
   <script src="../assets/js/core/maps.js"></script>
+  <script src="../assets/js/core/ai.js"></script>
   <script src="../assets/js/citizen/new-complaint.js"></script>
 </body>
 </html>

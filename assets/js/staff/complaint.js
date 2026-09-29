@@ -1,6 +1,7 @@
 /* تفاصيل البلاغ للموظف والمدير: تغيير الحالة/الأولوية/الإسناد، ملاحظات داخلية، صور المعالجة
    كل تغيير يمر عبر دالة update_complaint في قاعدة البيانات التي تسجل السجل وترسل الإشعارات،
    وRLS + Triggers تمنع الموظف من تعديل بلاغات خارج قسمه أو تغيير الحقول المحظورة. */
+const URGENCY_TEXT = { low: 'منخفض', medium: 'متوسط', high: 'مرتفع', urgent: 'عاجل' }
 App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
   const id = getParam('id')
   if (!id) return App.go('complaints.html')
@@ -16,6 +17,7 @@ App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
   }
 
   const cat = c.category || {}
+  let infoExtra = '' // عناصر إضافية (اقتراح الذكاء الاصطناعي والتأكيدات) تبقى بعد إعادة الرسم
   function renderHeader() {
     document.title = `${c.complaint_number} | تفاصيل البلاغ`
     $('#crumb').textContent = c.complaint_number
@@ -29,10 +31,30 @@ App.page({ roles: ['employee', 'admin'] }, async ({ profile }) => {
       ['timer', 'الموعد النهائي (SLA)', `${formatDateTime(c.due_at)}${cat.sla_days ? ` (${cat.sla_days} أيام)` : ''}`],
       ['user', 'الموظف المسؤول', c.assignee?.full_name || 'غير محدد'],
     ]
-    $('#info').innerHTML = info.map(([ic, k, v]) => `<div class="info-item"><span class="icon-box sm box-neutral">${icon(ic)}</span><dl><dt>${k}</dt><dd>${esc(v)}</dd></dl></div>`).join('')
+    $('#info').innerHTML = info.map(([ic, k, v]) => `<div class="info-item"><span class="icon-box sm box-neutral">${icon(ic)}</span><dl><dt>${k}</dt><dd>${esc(v)}</dd></dl></div>`).join('') + infoExtra
   }
   renderHeader()
   $('#description').textContent = c.description
+
+  // اقتراح الذكاء الاصطناعي عند الإنشاء + تأكيدات المواطنين الآخرين (بلاغات مكررة تم دمجها)
+  Promise.all([
+    run(sb.from('ai_analyses').select('kind, result, created_at').eq('complaint_id', c.id).order('created_at', { ascending: false }).limit(1)).catch(() => []),
+    run(sb.from('complaint_contributions').select('comment, created_at').eq('complaint_id', c.id).order('created_at')).catch(() => []),
+  ]).then(([ai, contribs]) => {
+    const extra = []
+    if (ai[0]) {
+      const r = ai[0].result || {}
+      extra.push(['sparkles', 'اقتراح الذكاء الاصطناعي', `${r.category_name || 'نوع غير محدد'} · استعجال ${URGENCY_TEXT[r.urgency] || '—'}${ai[0].kind === 'image' ? ' (من صورة)' : ' (من نص)'}`])
+    }
+    if (contribs.length) extra.push(['users', 'تأكيدات مواطنين آخرين', `${contribs.length} مواطن أكد نفس المشكلة`])
+    infoExtra = extra.map(([ic, k, v]) => `<div class="info-item"><span class="icon-box sm box-neutral">${icon(ic)}</span><dl><dt>${k}</dt><dd>${esc(v)}</dd></dl></div>`).join('')
+    if (extra.length) renderHeader()
+    const notes = contribs.filter((x) => x.comment)
+    if (notes.length)
+      $('#description').insertAdjacentHTML('afterend', `<div class="mt-3"><p class="text-sm fw-600 mb-2">ملاحظات المواطنين الذين أكدوا المشكلة</p>${notes
+        .map((x) => `<p class="text-sm c-2 leading-loose" style="padding:10px 12px;border-radius:10px;background:var(--canvas);margin-top:6px">«${esc(x.comment)}» <span class="text-xs c-3">— ${formatDate(x.created_at)}</span></p>`)
+        .join('')}</div>`)
+  })
   $('#address').textContent = [c.area?.name, c.address].filter(Boolean).join(' — ')
   $('#gmaps').href = `https://www.google.com/maps?q=${c.latitude},${c.longitude}`
   Maps.location($('#map'), c.latitude, c.longitude)
