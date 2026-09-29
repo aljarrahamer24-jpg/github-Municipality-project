@@ -10,6 +10,8 @@
 
 const Maps = (() => {
   const TILES = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  // خادم بديل إذا تعذر تحميل صور الخريطة من الخادم الأساسي (حتى لا تظهر الخريطة بيضاء)
+  const TILES_FALLBACK = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 
   const pin = L.divIcon({
     className: '',
@@ -21,8 +23,18 @@ const Maps = (() => {
   function base(el, center = APP_CONFIG.MAP_CENTER, zoom = APP_CONFIG.MAP_ZOOM) {
     el.classList.add('map')
     const map = L.map(el, { center, zoom, scrollWheelZoom: false, attributionControl: true })
-    L.tileLayer(TILES, { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }).addTo(map)
+    const layer = L.tileLayer(TILES, { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }).addTo(map)
+    let errors = 0
+    layer.on('tileerror', () => {
+      if (++errors === 4) {
+        layer.setUrl(TILES_FALLBACK)
+        map.attributionControl.removeAttribution('© OpenStreetMap © CARTO')
+        map.attributionControl.addAttribution('© OpenStreetMap')
+      }
+    })
     map.attributionControl.setPrefix('')
+    // إذا أُنشئت الخريطة داخل عنصر كان مخفياً، نعيد حساب المقاس عند ظهوره
+    if (window.ResizeObserver) new ResizeObserver(() => map.invalidateSize()).observe(el)
     return map
   }
 
@@ -40,7 +52,12 @@ const Maps = (() => {
         marker = L.marker(latlng, { icon: pin, draggable: true }).addTo(map)
         marker.on('dragend', () => onPick(marker.getLatLng()))
       } else marker.setLatLng(latlng)
-      if (fly) map.flyTo(latlng, Math.max(map.getZoom(), 16), { duration: 0.6 })
+      if (fly) {
+        map.invalidateSize()
+        // للمسافات البعيدة ننتقل مباشرة (الانتقال المتحرك لمسافة كبيرة قد يُظهر الخريطة فارغة)
+        const far = map.getCenter().distanceTo(latlng) > 20000
+        far ? map.setView(latlng, 16) : map.flyTo(latlng, Math.max(map.getZoom(), 16), { duration: 0.6 })
+      }
       onPick(L.latLng(latlng))
     }
     map.on('click', (e) => set(e.latlng, false))
@@ -90,8 +107,8 @@ const Maps = (() => {
     return map
   }
 
-  // أقرب منطقة لإحداثيات معينة (لاقتراح الحي تلقائياً)
-  function nearestArea(areas, lat, lng) {
+  // أقرب منطقة لإحداثيات معينة (لاقتراح الحي تلقائياً) — maxMeters: لا نقترح منطقة أبعد من ذلك
+  function nearestArea(areas, lat, lng, maxMeters = Infinity) {
     let best = null
     let bestD = Infinity
     for (const a of areas) {
@@ -102,7 +119,7 @@ const Maps = (() => {
         best = a
       }
     }
-    return best
+    return bestD <= maxMeters ? best : null
   }
 
   return { location, picker, complaints, risk, nearestArea }

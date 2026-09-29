@@ -39,8 +39,10 @@ App.page({ roles: ['citizen'] }, async () => {
     $('#coords-val').textContent = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`
     $('#pos-field').classList.remove('is-invalid')
     // اقتراح المنطقة الأقرب تلقائياً (يمكن للمواطن تغييرها)
-    const near = Maps.nearestArea(areas, latlng.lat, latlng.lng)
-    if (near && !district.dataset.manual) district.value = near.id
+    // اقتراح أقرب منطقة فقط إذا كانت ضمن 3 كم (وإلا فالموقع خارج مناطق البلدية المسجلة)
+    const near = Maps.nearestArea(areas, latlng.lat, latlng.lng, 3000)
+    if (!district.dataset.manual) district.value = near ? near.id : ''
+    $('#area-far').hidden = !!near || !areas.some((a) => a.latitude != null)
     paint()
   }
   function ensureMap() {
@@ -266,7 +268,7 @@ App.page({ roles: ['citizen'] }, async () => {
   const getPosition = () =>
     new Promise((resolve, reject) => {
       if (!navigator.geolocation) return reject(new Error('unsupported'))
-      navigator.geolocation.getCurrentPosition((p) => resolve({ lat: p.coords.latitude, lng: p.coords.longitude }), reject, { enableHighAccuracy: true, timeout: 10000 })
+      navigator.geolocation.getCurrentPosition((p) => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, accuracy: p.coords.accuracy }), reject, { enableHighAccuracy: true, timeout: 10000 })
     })
 
   async function applySuggestion(r, file) {
@@ -284,9 +286,13 @@ App.page({ roles: ['citizen'] }, async () => {
     aiStatus('', '')
     // الانتقال لأول خطوة تحتاج إكمالاً، أو للمراجعة مباشرة
     const v = valid()
-    const next = v.findIndex((ok, i) => i < 3 && !ok)
+    let next = v.findIndex((ok, i) => i < 3 && !ok)
+    // الموقع التقريبي (أجهزة بدون GPS تقدّر الموقع من الإنترنت) يحتاج تأكيداً على الخريطة
+    const rough = pos && pos.accuracy > 300
+    if (next === -1 && rough) next = 2
     if (!r.category_id) toast('لم نتمكن من تحديد نوع المشكلة بدقة، اختره من القائمة.', 'info')
     else if (!pos) toast('لم نتمكن من تحديد موقعك تلقائياً. حدده على الخريطة.', 'info')
+    else if (rough) toast(`الموقع تقريبي (بدقة ${Math.round(pos.accuracy / 1000) || 1} كم تقريباً). حرّك الدبوس لمكان المشكلة بالضبط.`, 'info')
     else toast('تمت تعبئة البلاغ — راجعه قبل الإرسال')
     go(next === -1 ? 3 : next)
     showErrors()
