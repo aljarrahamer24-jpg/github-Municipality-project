@@ -31,6 +31,10 @@
               <!-- الخطوة 1: نوع المشكلة -->
               <section class="step-pane stack" data-step="0">
                 <!-- البلاغ السريع بالذكاء الاصطناعي (اختياري — يمكن دائماً المتابعة يدوياً) -->
+                <div class="alert alert-info"><i data-icon="camera"></i><div>
+                  <p class="alert-title">صورة المكان إلزامية</p>
+                  <p class="alert-body">أضف صورة للمكان قبل المتابعة: صوّرها مع البلاغ السريع، أو أضفها في خانة "صورة المكان" أسفل أنواع المشكلة إذا لم ترد استخدام الذكاء الاصطناعي.</p>
+                </div></div>
                 <div class="ai-quick" id="ai-quick">
                   <div class="flex items-start gap-3">
                     <span class="icon-box sm box-primary"><i data-icon="sparkles"></i></span>
@@ -60,9 +64,15 @@
                 </div>
                 <div class="tiles" id="tiles"></div>
                 <p class="error-text text-sm" id="err-cat" hidden>يرجى اختيار نوع المشكلة للمتابعة.</p>
+                <div class="field" id="photo-field">
+                  <label class="label">صورة المكان<span class="req">*</span></label>
+                  <div data-upload id="uploader" data-label="أضف صورة للمكان (إلزامي) — اضغط أو اسحب الصور هنا"></div>
+                  <p class="hint">صورة واحدة على الأقل إلزامية قبل المتابعة. هذه الخانة لا ترسل الصورة للذكاء الاصطناعي.</p>
+                  <p class="error-text">أضف صورة واحدة على الأقل للمكان للمتابعة (إلزامي)</p>
+                </div>
               </section>
 
-              <!-- الخطوة 2: التفاصيل والصور -->
+              <!-- الخطوة 2: التفاصيل -->
               <section class="step-pane stack" data-step="1" hidden>
                 <div class="field">
                   <label class="label" for="title">عنوان البلاغ<span class="req">*</span></label>
@@ -75,12 +85,6 @@
                   <textarea class="textarea" id="desc" rows="5" maxlength="600" placeholder="صف المشكلة بالتفصيل: منذ متى، مدى خطورتها، وأي معلومات تساعد الفريق..."></textarea>
                   <p class="text-xs c-3 text-end"><span id="desc-count">0</span> / 600</p>
                   <p class="error-text">يرجى كتابة وصف أوضح (15 حرفاً على الأقل)</p>
-                </div>
-                <div class="field">
-                  <label class="label">صور المشكلة<span class="req">*</span></label>
-                  <div data-upload id="uploader"></div>
-                  <p class="hint">صورة واحدة على الأقل مطلوبة — صوّر المكان بوضوح لتسريع المعالجة</p>
-                  <p class="error-text">أضف صورة واحدة على الأقل للمكان (إلزامي)</p>
                 </div>
               </section>
 

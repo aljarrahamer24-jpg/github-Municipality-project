@@ -1,9 +1,9 @@
-/* إنشاء بلاغ — 4 خطوات: النوع ← التفاصيل والصور ← الموقع ← المراجعة والإرسال
+/* إنشاء بلاغ — 4 خطوات: النوع وصورة المكان (إلزامية) ← التفاصيل ← الموقع ← المراجعة والإرسال
    عند الإرسال: كشف البلاغات المكررة القريبة ← إنشاء البلاغ (الرقم والحالة والقسم يحددها الخادم) ← رفع الصور
    سجل الحالة والإشعارات تُنشأ تلقائياً بواسطة Triggers في قاعدة البيانات.
    البلاغ السريع بالذكاء الاصطناعي (صورة / نص / صوت) يعبّئ نفس الخطوات فقط، والمواطن يراجع قبل الإرسال. */
 App.page({ roles: ['citizen'] }, async () => {
-  const STEPS = ['نوع المشكلة', 'التفاصيل والصور', 'الموقع', 'المراجعة والإرسال']
+  const STEPS = ['النوع والصورة', 'التفاصيل', 'الموقع', 'المراجعة والإرسال']
   const s = { step: 0, cat: getParam('cat'), pos: null, sending: false, ai: null }
   const title = $('#title')
   const desc = $('#desc')
@@ -97,15 +97,17 @@ App.page({ roles: ['citizen'] }, async () => {
   const areaOk = () => areaName().length >= 2
   // صورة واحدة على الأقل إلزامية
   const hasPhoto = () => uploader.getFiles().length > 0
-  const valid = () => [!!s.cat, title.value.trim().length >= 5 && desc.value.trim().length >= 15 && hasPhoto(), !!s.pos && areaOk(), true]
+  const valid = () => [!!s.cat && hasPhoto(), title.value.trim().length >= 5 && desc.value.trim().length >= 15, !!s.pos && areaOk(), true]
   const catObj = () => categories.find((c) => c.id === s.cat)
 
   function showErrors() {
-    if (s.step === 0) $('#err-cat').hidden = !!s.cat
+    if (s.step === 0) {
+      $('#err-cat').hidden = !!s.cat
+      $('#photo-field').classList.toggle('is-invalid', !hasPhoto())
+    }
     if (s.step === 1) {
       title.closest('.field').classList.toggle('is-invalid', title.value.trim().length < 5)
       desc.closest('.field').classList.toggle('is-invalid', desc.value.trim().length < 15)
-      uploader.closest('.field').classList.toggle('is-invalid', !hasPhoto())
     }
     if (s.step === 2) {
       $('#pos-field').classList.toggle('is-invalid', !s.pos)
@@ -140,7 +142,7 @@ App.page({ roles: ['citizen'] }, async () => {
         ['القسم المختص', cat?.department?.name || 'يُحدد لاحقاً', 0],
         ['العنوان', title.value, 1],
         ['الوصف', desc.value, 1],
-        ['الصور', files.length ? `${files.length} صورة` : 'بدون صور', 1],
+        ['الصور', files.length ? `${files.length} صورة` : 'بدون صور', 0],
         ['المنطقة', dist?.name, 2],
         ['الموقع', (landmark.value ? landmark.value + ' — ' : '') + (s.pos ? `${s.pos.lat.toFixed(5)}, ${s.pos.lng.toFixed(5)}` : ''), 2],
       ]
@@ -315,7 +317,8 @@ App.page({ roles: ['citizen'] }, async () => {
     // الموقع التقريبي (أجهزة بدون GPS تقدّر الموقع من الإنترنت) يحتاج تأكيداً على الخريطة
     const rough = pos && pos.accuracy > 300
     if (next === -1 && rough) next = 2
-    if (!r.category_id) toast('لم نتمكن من تحديد نوع المشكلة بدقة، اختره من القائمة.', 'info')
+    if (!hasPhoto()) toast(r.category_id ? 'تمت تعبئة البلاغ — أضف صورة للمكان للمتابعة (إلزامي).' : 'أضف صورة للمكان واختر نوع المشكلة للمتابعة.', 'info')
+    else if (!r.category_id) toast('لم نتمكن من تحديد نوع المشكلة بدقة، اختره من القائمة.', 'info')
     else if (!pos) toast('لم نتمكن من تحديد موقعك تلقائياً. حدده على الخريطة.', 'info')
     else if (rough) toast(`الموقع تقريبي (بدقة ${Math.round(pos.accuracy / 1000) || 1} كم تقريباً). حرّك الدبوس لمكان المشكلة بالضبط.`, 'info')
     else toast('تمت تعبئة البلاغ — راجعه قبل الإرسال')
