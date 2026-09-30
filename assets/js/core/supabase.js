@@ -44,6 +44,8 @@ function toAppError(err) {
     [/User already registered|already been registered/i, 'هذا البريد الإلكتروني مسجل مسبقاً.'],
     [/Password should be at least/i, 'كلمة المرور قصيرة جداً (8 أحرف على الأقل).'],
     [/weak.?password|Password is known to be weak/i, 'كلمة المرور ضعيفة، اختر كلمة مرور أقوى.'],
+    // حد رسائل البريد في Supabase (الخطة المجانية ترسل رسائل قليلة جداً في الساعة عند تفعيل تأكيد البريد)
+    [/email rate limit|over_email_send_rate_limit/i, 'تم الوصول لحد رسائل البريد المسموح في الساعة (تأكيد البريد مفعّل في Supabase). انتظر حوالي ساعة، أو اطلب من مدير النظام إيقاف "Confirm email" في إعدادات Supabase.'],
     [/rate limit|too many requests|For security purposes/i, 'محاولات كثيرة خلال وقت قصير. انتظر قليلاً ثم حاول مجدداً.'],
     [/Unable to validate email address|invalid format/i, 'صيغة البريد الإلكتروني غير صحيحة.'],
     [/New password should be different/i, 'كلمة المرور الجديدة يجب أن تختلف عن القديمة.'],
