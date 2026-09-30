@@ -54,32 +54,6 @@
             <p class="error-text">كلمتا المرور غير متطابقتين</p>
           </div>
         </div>
-        <!-- طلب صلاحيات موظف (يبقى الحساب مواطناً حتى يوافق المدير) -->
-        <div class="stack-sm">
-          <label class="check"><input type="checkbox" id="is-staff"> أنا موظف في البلدية وأريد طلب صلاحيات موظف</label>
-          <div id="staff-fields" class="stack-sm" hidden>
-            <p class="text-xs c-3 leading-loose">سيُنشأ حسابك كحساب مواطن، ويُرسل طلبك لمدير النظام. بعد الموافقة يتحول حسابك إلى حساب موظف في القسم المحدد.</p>
-          <div class="grid sm-cols-2">
-            <div class="field">
-              <label class="label" for="staff-dept">القسم الذي تعمل فيه<span class="req">*</span></label>
-              <select class="select" id="staff-dept"><option value="">اختر القسم</option></select>
-              <p class="error-text">اختر القسم</p>
-            </div>
-            <div class="field">
-              <label class="label" for="staff-title">المسمى الوظيفي</label>
-              <input class="input" id="staff-title" maxlength="100" placeholder="مثال: مهندس صيانة">
-            </div>
-            <div class="field">
-              <label class="label" for="staff-number">الرقم الوظيفي</label>
-              <input class="input" id="staff-number" maxlength="30" dir="ltr" placeholder="اختياري">
-            </div>
-            <div class="field">
-              <label class="label" for="staff-note">ملاحظة للمدير</label>
-              <input class="input" id="staff-note" maxlength="500" placeholder="اختياري">
-            </div>
-          </div>
-          </div>
-        </div>
         <div class="field" id="terms-field">
           <label class="check"><input type="checkbox" id="terms"> أوافق على شروط الاستخدام وسياسة الخصوصية</label>
           <p class="error-text">يجب الموافقة على الشروط للمتابعة</p>

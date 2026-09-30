@@ -46,33 +46,6 @@
         <div class="card-footer flex justify-end"><button class="btn btn-primary" type="submit"><i data-icon="save"></i>حفظ التغييرات</button></div>
       </form>
 
-      <!-- طلب صلاحيات موظف (يعتمد على موافقة المدير) -->
-      <form class="card" id="staff-request" novalidate hidden>
-        <div class="card-header"><div><h2 class="card-title">هل أنت موظف في البلدية؟</h2><p class="card-sub">اطلب صلاحيات موظف، وسيراجع مدير النظام طلبك.</p></div></div>
-        <div class="card-body" id="staff-request-body">
-          <div class="grid sm-cols-2">
-            <div class="field">
-              <label class="label" for="staff-dept">القسم الذي تعمل فيه<span class="req">*</span></label>
-              <select class="select" id="staff-dept"><option value="">اختر القسم</option></select>
-              <p class="error-text">اختر القسم</p>
-            </div>
-            <div class="field">
-              <label class="label" for="staff-title">المسمى الوظيفي</label>
-              <input class="input" id="staff-title" maxlength="100" placeholder="مثال: مهندس صيانة">
-            </div>
-            <div class="field">
-              <label class="label" for="staff-number">الرقم الوظيفي</label>
-              <input class="input" id="staff-number" maxlength="30" dir="ltr" placeholder="اختياري">
-            </div>
-            <div class="field">
-              <label class="label" for="staff-note">ملاحظة للمدير</label>
-              <input class="input" id="staff-note" maxlength="500" placeholder="اختياري">
-            </div>
-          </div>
-        </div>
-        <div class="card-footer flex justify-end" id="staff-request-foot"><button class="btn btn-outline" type="submit"><i data-icon="send"></i>إرسال الطلب</button></div>
-      </form>
-
       <form class="card" id="password-form" novalidate>
         <div class="card-header"><h2 class="card-title">تغيير كلمة المرور</h2></div>
         <div class="card-body grid sm-cols-2">

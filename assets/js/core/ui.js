@@ -343,6 +343,7 @@ function initUploads(root = document) {
         })
         previews.appendChild(item)
       })
+      box.dispatchEvent(new CustomEvent('files-change'))
     }
     const add = (list) => {
       for (const f of Array.from(list)) {

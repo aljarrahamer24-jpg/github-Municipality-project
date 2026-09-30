@@ -11,8 +11,6 @@ const Notifications = {
 
   // رابط البلاغ المرتبط بالإشعار حسب دور المستخدم
   link(n) {
-    // طلب صلاحيات موظف جديد → صفحة الموظفين عند المدير
-    if (!n.complaint_id && this.profile.role === 'admin' && n.title?.startsWith('طلب صلاحيات')) return url('admin/employees.html')
     if (!n.complaint_id) return this.profile.role === 'citizen' ? url('citizen/notifications.html') : null
     return url(`${this.profile.role}/complaint.html?id=${n.complaint_id}`)
   },

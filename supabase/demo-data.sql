@@ -115,7 +115,7 @@ begin
       v_days := 3 + floor(random() * 80)::integer;
     else
       select * into v_cat from public.problem_categories order by random() limit 1;
-      select * into v_area from public.areas order by random() limit 1;
+      select * into v_area from public.areas where latitude is not null order by random() limit 1;
       v_lat := v_area.latitude + (random() - 0.5) * 0.014; v_lng := v_area.longitude + (random() - 0.5) * 0.014;
       v_days := floor(random() * 180)::integer;
     end if;

@@ -378,6 +378,4 @@ App.page({ roles: ['admin'] }, async ({ profile: me }) => {
     }
   })
   reload()
-  // صفحة الموظفين: طلبات صلاحيات الموظف بانتظار موافقة المدير
-  if (entity === 'employees' && typeof StaffRequests !== 'undefined') StaffRequests.mount($('#staff-requests'), departments, reload)
 })

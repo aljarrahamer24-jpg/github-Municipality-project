@@ -117,7 +117,6 @@ const App = {
       login: ['يرجى تسجيل الدخول للمتابعة.', 'info'],
       inactive: ['تم إيقاف هذا الحساب. تواصل مع إدارة البلدية.', 'error'],
       logout: ['تم تسجيل الخروج بنجاح.', 'success'],
-      staff_request: ['تم إنشاء حسابك وإرسال طلب صلاحيات الموظف للمدير. ستصلك نتيجة المراجعة في الإشعارات.', 'success'],
     }
     if (messages[reason]) {
       toast(...messages[reason])

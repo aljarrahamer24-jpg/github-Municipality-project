@@ -37,46 +37,6 @@ App.page({ roles: ['citizen'] }, async ({ profile }) => {
     }
   })
 
-  /* ---------- طلب صلاحيات موظف ---------- */
-  const STATUS = { pending: ['بانتظار موافقة المدير', 'warning'], approved: ['تمت الموافقة', 'success'], rejected: ['مرفوض', 'error'], cancelled: ['ملغى', 'neutral'] }
-  async function loadStaffRequest() {
-    const [reqs, depts] = await Promise.all([
-      run(sb.from('staff_requests').select('*, department:departments(name)').eq('user_id', profile.id).order('created_at', { ascending: false }).limit(1)),
-      API.departments({ activeOnly: true }),
-    ])
-    const r = reqs[0]
-    $('#staff-request').hidden = false
-    if (r && r.status === 'pending') {
-      $('#staff-request-body').innerHTML = `<div class="flex wrap items-center justify-between gap-2">
-        <div><p class="fw-600">${esc(r.department?.name || '')}${r.job_title ? ` — ${esc(r.job_title)}` : ''}</p><p class="text-xs c-3 mt-1">أُرسل في ${formatDate(r.created_at)}</p></div>
-        ${badge(STATUS.pending[0], STATUS.pending[1])}</div>`
-      $('#staff-request-foot').innerHTML = `<button type="button" class="btn btn-ghost" id="cancel-staff">إلغاء الطلب</button>`
-      $('#cancel-staff').addEventListener('click', async (e) => {
-        if (!(await confirmDialog({ title: 'إلغاء الطلب', message: 'هل تريد إلغاء طلب صلاحيات الموظف؟', confirmText: 'إلغاء الطلب', danger: true }))) return
-        await withBusy(e.currentTarget, () => run(sb.rpc('cancel_staff_request')))
-        location.reload()
-      })
-      return
-    }
-    fillSelect($('#staff-dept'), depts.map((d) => [d.id, d.name]), { placeholder: 'اختر القسم' })
-    if (r) $('#staff-request-body').insertAdjacentHTML('afterbegin', `<p class="text-sm c-2 mb-3">آخر طلب: ${badge(...STATUS[r.status])}${r.review_note ? ` — ${esc(r.review_note)}` : ''}</p>`)
-  }
-  loadStaffRequest().catch(() => {})
-  $('#staff-request').addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const dept = $('#staff-dept')?.value
-    if (!dept) return $('#staff-dept').closest('.field').classList.add('is-invalid')
-    try {
-      await withBusy($('button[type="submit"]', e.target), () =>
-        run(sb.rpc('submit_staff_request', { p_department: dept, p_job_title: $('#staff-title').value.trim() || null, p_employee_number: $('#staff-number').value.trim() || null, p_note: $('#staff-note').value.trim() || null })),
-      )
-      toast('تم إرسال طلبك إلى مدير النظام')
-      location.reload()
-    } catch (err) {
-      toast(toAppError(err).message, 'error')
-    }
-  })
-
   $('#password-form').addEventListener('submit', async (e) => {
     e.preventDefault()
     const p1 = $('#new-password').value

@@ -77,9 +77,10 @@
                   <p class="error-text">يرجى كتابة وصف أوضح (15 حرفاً على الأقل)</p>
                 </div>
                 <div class="field">
-                  <label class="label">صور المشكلة</label>
+                  <label class="label">صور المشكلة<span class="req">*</span></label>
                   <div data-upload id="uploader"></div>
-                  <p class="hint">الصور الواضحة تسرّع معالجة البلاغ</p>
+                  <p class="hint">صورة واحدة على الأقل مطلوبة — صوّر المكان بوضوح لتسريع المعالجة</p>
+                  <p class="error-text">أضف صورة واحدة على الأقل للمكان (إلزامي)</p>
                 </div>
               </section>
 
@@ -103,14 +104,11 @@
                 <div class="grid sm-cols-2">
                   <div class="field">
                     <label class="label" for="district">المنطقة / الحي<span class="req">*</span></label>
-                    <select class="select" id="district"></select>
-                    <p class="error-text">اختر المنطقة</p>
-                    <p class="hint c-warning" id="area-far" hidden>الموقع المحدد بعيد عن المناطق المسجلة. تأكد من مكان الدبوس، أو اختر "منطقتي غير موجودة" واكتب اسمها.</p>
-                  </div>
-                  <div class="field" id="district-other-field" hidden>
-                    <label class="label" for="district-other">اسم منطقتك / حيّك<span class="req">*</span></label>
-                    <input class="input" id="district-other" maxlength="100" placeholder="مثال: حي الصفطاوي">
-                    <p class="error-text">اكتب اسم المنطقة</p>
+                    <input class="input" id="district" list="district-list" maxlength="100" autocomplete="off" placeholder="اكتب اسم الحي أو اختر من القائمة">
+                    <datalist id="district-list"></datalist>
+                    <p class="hint">اختر من القائمة، أو اكتب اسم منطقتك إذا لم تكن موجودة</p>
+                    <p class="error-text">اكتب أو اختر المنطقة</p>
+                    <p class="hint c-warning" id="area-far" hidden>الموقع المحدد بعيد عن المناطق المسجلة. تأكد من مكان الدبوس، أو اكتب اسم منطقتك.</p>
                   </div>
                   <div class="field">
                     <label class="label" for="landmark">العنوان / أقرب معلم</label>
