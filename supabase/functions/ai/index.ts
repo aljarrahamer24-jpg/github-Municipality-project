@@ -71,7 +71,38 @@ class AIError extends Error {
 }
 
 // المزوّد يُختار من AI_PROVIDER، أو تلقائياً حسب المفتاح الموجود في Secrets
+// أخطاء مؤقتة من المزوّد تستحق تجربة المزوّد الاحتياطي
+const FALLBACK_CODES = ['ai_unavailable', 'ai_unreachable', 'ai_quota', 'ai_empty', 'ai_bad_output']
+
+/** إذا كان Gemini هو الأساسي ومفتاح OpenRouter موجوداً: عند فشل مؤقت في Gemini ننتقل تلقائياً إلى OpenRouter */
+function withFallback(primary: AIProvider, makeBackup: () => AIProvider): AIProvider {
+  const self: { name: string; model: string; generateJSON: AIProvider['generateJSON']; generateText: AIProvider['generateText'] } = {
+    name: primary.name, model: primary.model,
+    generateJSON: (req) => run((p) => p.generateJSON(req)),
+    generateText: (req) => run((p) => p.generateText(req)),
+  }
+  async function run<T>(fn: (p: AIProvider) => Promise<T>): Promise<T> {
+    try {
+      self.name = primary.name; self.model = primary.model
+      return await fn(primary)
+    } catch (e) {
+      if (!(e instanceof AIError) || !FALLBACK_CODES.includes(e.code)) throw e
+      const backup = makeBackup()
+      console.warn(`${primary.name} failed (${e.code}), falling back to ${backup.name}`)
+      self.name = backup.name; self.model = backup.model
+      return await fn(backup)
+    }
+  }
+  return self
+}
+
 function getProvider(): AIProvider {
+  const p = getPrimaryProvider()
+  if (p.name === 'gemini' && Deno.env.get('OPENROUTER_API_KEY')) return withFallback(p, createOpenRouterProvider)
+  return p
+}
+
+function getPrimaryProvider(): AIProvider {
   const name = (Deno.env.get('AI_PROVIDER') || (Deno.env.get('OPENROUTER_API_KEY') && !Deno.env.get('GEMINI_API_KEY') ? 'openrouter' : 'gemini')).toLowerCase()
   switch (name) {
     case 'gemini':
@@ -117,7 +148,7 @@ function createGeminiProvider(): AIProvider {
   // التصنيف لا يحتاج تفكيراً عميقاً، فنطلب مستوى منخفضاً (ونعيد المحاولة بدونه إن رفضه النموذج).
   const thinking = /^gemini-3/.test(model) ? { thinkingLevel: 'low' } : null
 
-  async function call(body: Record<string, unknown>, withThinking = true): Promise<string> {
+  async function call(body: Record<string, unknown>, withThinking = true, attempt = 1): Promise<string> {
     const payload = thinking && withThinking ? { ...body, generationConfig: { ...(body.generationConfig as object), thinkingConfig: thinking } } : body
     const ctrl = new AbortController()
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
@@ -143,9 +174,15 @@ function createGeminiProvider(): AIProvider {
     }
     if (res.status === 400 || res.status === 401 || res.status === 403 || res.status === 404) {
       const err = (await res.text()).slice(0, 500)
-      if (res.status === 400 && thinking && withThinking && /thinking/i.test(err)) return call(body, false)
+      if (res.status === 400 && thinking && withThinking && /thinking/i.test(err)) return call(body, false, attempt)
       console.error('gemini error', res.status, err)
       throw new AIError('إعدادات خدمة الذكاء الاصطناعي غير صحيحة (المفتاح أو اسم النموذج).', 502, 'ai_misconfigured')
+    }
+    if (res.status >= 500 && attempt < 3) {
+      // ضغط مؤقت على خوادم Gemini (مثل 503): ننتظر قليلاً ونعيد المحاولة
+      console.warn('gemini busy, retrying', res.status, (await res.text()).slice(0, 200))
+      await new Promise((ok) => setTimeout(ok, 1500 * attempt))
+      return call(body, withThinking, attempt + 1)
     }
     if (!res.ok) {
       console.error('gemini unavailable', res.status, (await res.text()).slice(0, 300))
