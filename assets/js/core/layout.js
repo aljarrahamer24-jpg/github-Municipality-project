@@ -25,7 +25,7 @@ const Layout = (() => {
         <div class="menu-sec">
           <a href="${App.homeUrl(p.role)}">${icon('layout-dashboard')}لوحة التحكم</a>
           ${p.role === 'citizen' ? `<a href="${url('citizen/profile.html')}">${icon('user-cog')}حسابي</a>` : ''}
-          <a href="${url('index.html')}">${icon('house')}الصفحة الرئيسية</a>
+          <a href="${url('home.html')}">${icon('house')}الصفحة الرئيسية</a>
         </div>
         <div class="menu-sec"><a class="danger" href="#" data-logout>${icon('log-out')}تسجيل الخروج</a></div>
       </div></div>`
@@ -36,8 +36,8 @@ const Layout = (() => {
 
   const footer = () => `<footer class="site-footer">
     <div class="container footer-grid">
-      <div class="stack">${brand(url('index.html'), true)}<p class="text-sm leading-loose">منصة رقمية رسمية لاستقبال شكاوى وطلبات المواطنين ومتابعتها بشفافية حتى إغلاقها.</p></div>
-      <div><h4>روابط سريعة</h4><ul><li><a href="${url('citizen/new.html')}">تقديم بلاغ</a></li><li><a href="${url('track.html')}">متابعة بلاغ</a></li><li><a href="${url('index.html#services')}">الخدمات البلدية</a></li><li><a href="${url('auth/register.html')}">إنشاء حساب</a></li></ul></div>
+      <div class="stack">${brand(url('home.html'), true)}<p class="text-sm leading-loose">منصة رقمية رسمية لاستقبال شكاوى وطلبات المواطنين ومتابعتها بشفافية حتى إغلاقها.</p></div>
+      <div><h4>روابط سريعة</h4><ul><li><a href="${url('citizen/new.html')}">تقديم بلاغ</a></li><li><a href="${url('track.html')}">متابعة بلاغ</a></li><li><a href="${url('home.html#services')}">الخدمات البلدية</a></li><li><a href="${url('auth/register.html')}">إنشاء حساب</a></li></ul></div>
       <div><h4>الدعم</h4><ul><li>الأسئلة الشائعة</li><li>سياسة الخصوصية</li><li>شروط الاستخدام</li><li>إمكانية الوصول</li></ul></div>
       <div><h4>تواصل معنا</h4><ul class="contact"><li>${icon('phone')}<span class="ltr">1800-000-000</span></li><li>${icon('mail')}info@municipality.example</li><li>${icon('map-pin')}مبنى البلدية — وسط البلد</li></ul></div>
     </div>
@@ -45,7 +45,7 @@ const Layout = (() => {
   </footer>`
 
   function publicLayout(content, p) {
-    const links = [['index.html', 'الرئيسية', 'home'], ['index.html#services', 'الخدمات', ''], ['index.html#how', 'كيف تعمل المنصة', ''], ['track.html', 'متابعة بلاغ', 'track']]
+    const links = [['home.html', 'الرئيسية', 'home'], ['home.html#services', 'الخدمات', ''], ['home.html#how', 'كيف تعمل المنصة', ''], ['track.html', 'متابعة بلاغ', 'track']]
     const actions = p
       ? `<a class="btn btn-primary desktop-only" href="${App.homeUrl(p.role)}">${icon('layout-dashboard')}لوحتي</a>`
       : `<a class="btn btn-ghost desktop-only" href="${url('auth/login.html')}">تسجيل الدخول</a><a class="btn btn-primary desktop-only" href="${url('auth/register.html')}">إنشاء حساب</a>`
@@ -55,11 +55,11 @@ const Layout = (() => {
     document.body.classList.add('public')
     document.body.innerHTML = `
       <header class="site-header"><div class="container">
-        ${brand(url('index.html'))}
+        ${brand(url('home.html'))}
         <nav class="main-nav public-nav">${links.map(([h, l, k]) => `<a href="${url(h)}" class="${k ? isActive(k) : ''}">${l}</a>`).join('')}</nav>
         <div class="header-actions">${actions}<button class="icon-btn menu-toggle" data-drawer-open aria-label="القائمة">${icon('menu')}</button></div>
       </div></header>
-      ${drawer(`<div class="drawer-head">${brand(url('index.html'))}<button class="icon-btn" data-drawer-close aria-label="إغلاق">${icon('x')}</button></div>
+      ${drawer(`<div class="drawer-head">${brand(url('home.html'))}<button class="icon-btn" data-drawer-close aria-label="إغلاق">${icon('x')}</button></div>
         <nav class="drawer-nav">${links.map(([h, l]) => `<a href="${url(h)}" data-drawer-close>${l}</a>`).join('')}</nav>
         <div class="drawer-foot">${drawerActions}</div>`)}
       <main id="content"></main>
@@ -70,7 +70,7 @@ const Layout = (() => {
   function authLayout(content) {
     document.body.innerHTML = `<div class="auth">
       <div class="auth-main">
-        ${brand(url('index.html'))}
+        ${brand(url('home.html'))}
         <div class="auth-center"><div class="auth-box" id="auth-slot"></div></div>
         <p class="text-center text-xs c-3">© ${new Date().getFullYear()} بلدية المدينة</p>
       </div>
@@ -100,7 +100,7 @@ const Layout = (() => {
     document.body.classList.add('citizen')
     document.body.innerHTML = `
       <header class="site-header"><div class="container">
-        ${brand(url('index.html'))}
+        ${brand(url('home.html'))}
         <nav class="main-nav citizen-nav">${nav.map(tab).join('')}</nav>
         <div class="header-actions">
           <a class="btn btn-primary desktop-only" href="${url('citizen/new.html')}">${icon('plus')}بلاغ جديد</a>

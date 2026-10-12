@@ -9,7 +9,7 @@ flowchart TD
     ROOT(("المنصة"))
 
     ROOT --> PUB["الواجهة العامة"]
-    PUB --> P1["index.html الرئيسية"]
+    PUB --> P1["home.html الرئيسية"]
     PUB --> P2["track.html متابعة بلاغ"]
     PUB --> P3["screens.html فهرس الشاشات"]
     PUB --> P4["design-system.html نظام التصميم"]
@@ -58,7 +58,7 @@ flowchart TD
 
 | # | الدور | الصفحة | ملف HTML | ملف JavaScript (assets/js/) |
 |---|---|---|---|---|
-| 1 | عام | الصفحة الرئيسية | `index.html` | `public/home.js` |
+| 1 | عام | الصفحة الرئيسية (الرابط الأساسي للموقع يفتح تسجيل الدخول) | `home.html` | `public/home.js` |
 | 2 | عام | متابعة بلاغ برقم المتابعة | `track.html` | `public/track.js` |
 | 3 | عام | فهرس الشاشات | `screens.html` | `public/static.js` |
 | 4 | عام | نظام التصميم | `design-system.html` | `public/design-system.js` |
