@@ -10,8 +10,8 @@
    ========================================================================== */
 
 const APP_CONFIG = {
-  SUPABASE_URL: 'https://YOUR-PROJECT-ID.supabase.co',
-  SUPABASE_ANON_KEY: 'YOUR-ANON-OR-PUBLISHABLE-KEY',
+  SUPABASE_URL: 'https://lrlriimsfscgritbcqjs.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_PSaa1uzvNNHK5Pka-f6PPA_-p0WRdII',
 
   // مركز الخريطة الافتراضي (خط العرض، خط الطول) والتكبير
   MAP_CENTER: [32.5536, 35.8497],
