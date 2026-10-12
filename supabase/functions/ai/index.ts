@@ -89,7 +89,7 @@ function getProvider(): AIProvider {
 
 const DEFAULT_MODEL = 'gemini-3.1-flash-lite'
 const DEFAULT_BASE = 'https://generativelanguage.googleapis.com'
-const TIMEOUT_MS = 30_000
+const TIMEOUT_MS = 55_000
 
 type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } }
 
@@ -113,28 +113,44 @@ function createGeminiProvider(): AIProvider {
   const base = (Deno.env.get('GEMINI_BASE_URL') || DEFAULT_BASE).replace(/\/+$/, '')
   if (!apiKey) throw new AIError('لم يتم إعداد مفتاح خدمة الذكاء الاصطناعي بعد (GEMINI_API_KEY).', 503, 'ai_not_configured')
 
-  async function call(body: Record<string, unknown>): Promise<string> {
+  // نماذج Gemini 3 "تفكّر" قبل الإجابة افتراضياً، وهذا قد يستغرق وقتاً طويلاً مع الصور.
+  // التصنيف لا يحتاج تفكيراً عميقاً، فنطلب مستوى منخفضاً (ونعيد المحاولة بدونه إن رفضه النموذج).
+  const thinking = /^gemini-3/.test(model) ? { thinkingLevel: 'low' } : null
+
+  async function call(body: Record<string, unknown>, withThinking = true): Promise<string> {
+    const payload = thinking && withThinking ? { ...body, generationConfig: { ...(body.generationConfig as object), thinkingConfig: thinking } } : body
     const ctrl = new AbortController()
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS)
+    const started = Date.now()
     let res: Response
     try {
       res = await fetch(`${base}/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey! },
-        body: JSON.stringify(body),
+        body: JSON.stringify(payload),
         signal: ctrl.signal,
       })
     } catch (e) {
+      console.error('gemini fetch failed', model, `${Date.now() - started}ms`, String(e))
       throw new AIError(e instanceof DOMException && e.name === 'AbortError' ? 'استغرقت خدمة الذكاء الاصطناعي وقتاً طويلاً. حاول مجدداً.' : 'تعذر الاتصال بخدمة الذكاء الاصطناعي.', 504, 'ai_unreachable')
     } finally {
       clearTimeout(timer)
     }
-    if (res.status === 429) throw new AIError('تم تجاوز الحد المجاني لخدمة الذكاء الاصطناعي مؤقتاً. حاول بعد قليل أو أكمل يدوياً.', 429, 'ai_quota')
-    if (res.status === 400 || res.status === 403 || res.status === 404) {
-      console.error('gemini error', res.status, (await res.text()).slice(0, 500))
+    console.log('gemini', model, res.status, `${Date.now() - started}ms`)
+    if (res.status === 429) {
+      console.error('gemini quota', (await res.text()).slice(0, 500))
+      throw new AIError('تم تجاوز الحد المجاني لخدمة الذكاء الاصطناعي مؤقتاً. حاول بعد قليل أو أكمل يدوياً.', 429, 'ai_quota')
+    }
+    if (res.status === 400 || res.status === 401 || res.status === 403 || res.status === 404) {
+      const err = (await res.text()).slice(0, 500)
+      if (res.status === 400 && thinking && withThinking && /thinking/i.test(err)) return call(body, false)
+      console.error('gemini error', res.status, err)
       throw new AIError('إعدادات خدمة الذكاء الاصطناعي غير صحيحة (المفتاح أو اسم النموذج).', 502, 'ai_misconfigured')
     }
-    if (!res.ok) throw new AIError('خدمة الذكاء الاصطناعي غير متاحة حالياً.', 502, 'ai_unavailable')
+    if (!res.ok) {
+      console.error('gemini unavailable', res.status, (await res.text()).slice(0, 300))
+      throw new AIError('خدمة الذكاء الاصطناعي غير متاحة حالياً.', 502, 'ai_unavailable')
+    }
 
     const data = await res.json()
     if (data?.promptFeedback?.blockReason) throw new AIError('تعذر تحليل هذا المحتوى. أكمل البلاغ يدوياً.', 422, 'ai_blocked')
