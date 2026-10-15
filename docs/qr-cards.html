@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>رموز الدخول السريع</title>
+<style>
+  :root { --ink: #1d2a27; --muted: #5b6b67; --brand: #0b5d51; --line: #dfe5e2; --bg: #f6f7f5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.7 "Segoe UI", Tahoma, sans-serif; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+  h1 { color: var(--brand); font-size: 26px; margin: 0 0 4px; text-align: center; }
+  .lead { color: var(--muted); text-align: center; margin: 0 0 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 20px; text-align: center; break-inside: avoid; }
+  .card img { width: 100%; max-width: 240px; height: auto; }
+  .card h2 { margin: 8px 0 0; font-size: 22px; color: var(--brand); }
+  .card p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .card code { direction: ltr; unicode-bidi: embed; }
+  .note { margin-top: 20px; text-align: center; color: var(--muted); font-size: 14px; }
+  @media print { body { background: #fff; } .card { border-color: #999; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>منصة شكاوى البلدية: دخول سريع</h1>
+  <p class="lead">امسح الرمز بكاميرا الجوال للدخول مباشرة بالحساب التجريبي</p>
+  <div class="grid">
+    <div class="card"><img src="report/qr-admin.png" alt="QR المدير"><h2>مدير البلدية</h2><p>لوحة الإحصائيات والتحليلات وإدارة النظام</p><p><code>admin@demo.test</code></p></div>
+    <div class="card"><img src="report/qr-employee.png" alt="QR الموظف"><h2>موظف البلدية</h2><p>بلاغات قسم الطرق والأرصفة ومعالجتها</p><p><code>roads@demo.test</code></p></div>
+    <div class="card"><img src="report/qr-citizen.png" alt="QR المواطن"><h2>المواطن</h2><p>تقديم بلاغ جديد ومتابعة البلاغات</p><p><code>citizen@demo.test</code></p></div>
+  </div>
+  <p class="note">كلمة المرور لجميع الحسابات التجريبية: <code>Demo@12345</code></p>
+</main>
+</body>
+</html>

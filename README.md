@@ -77,6 +77,8 @@ where id = (select id from auth.users where email = 'your-email@example.com');
 | clean@demo.test | موظف: قسم النظافة العامة |
 | citizen@demo.test | مواطن |
 
+**دخول سريع بدون كتابة كلمة المرور (للعرض):** `auth/demo.html?as=admin` أو `employee` أو `citizen`. رموز QR الجاهزة للطباعة في `docs/qr-cards.pdf`. بعد المناقشة عطّلها من `assets/js/config.js` بجعل `DEMO_LOGIN: false`.
+
 ---
 
 ## ماذا يستطيع كل دور أن يفعل؟

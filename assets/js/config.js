@@ -20,4 +20,15 @@ const APP_CONFIG = {
   // حدود رفع الصور (يجب أن تتوافق مع إعدادات الـ Bucket في قاعدة البيانات)
   MAX_IMAGES: 5,
   MAX_IMAGE_MB: 5,
+
+  // دخول سريع للحسابات التجريبية عبر رمز QR (auth/demo.html?as=admin|employee|citizen)
+  // للعرض والمناقشة فقط: أي شخص يملك الرابط يدخل بهذه الحسابات.
+  // بعد المناقشة اجعلها false (أو احذف الحسابات التجريبية من قاعدة البيانات).
+  DEMO_LOGIN: true,
+  DEMO_ACCOUNTS: {
+    admin: { email: 'admin@demo.test', label: 'مدير البلدية' },
+    employee: { email: 'roads@demo.test', label: 'موظف قسم الطرق' },
+    citizen: { email: 'citizen@demo.test', label: 'مواطن' },
+  },
+  DEMO_PASSWORD: 'Demo@12345',
 }
