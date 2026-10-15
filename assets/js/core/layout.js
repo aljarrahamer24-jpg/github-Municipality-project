@@ -82,10 +82,21 @@ const Layout = (() => {
           <span class="chip-soft">الخدمات البلدية الإلكترونية</span>
           <h2>بلّغ عن المشكلة في دقيقة، وتابعها حتى تُحل.</h2>
           <ul>${['تقديم البلاغ مع الصور والموقع الدقيق', 'متابعة حالة البلاغ لحظة بلحظة', 'تقييم الخدمة بعد الإغلاق'].map((t) => `<li>${icon('circle-check')}${t}</li>`).join('')}</ul>
-          <div class="auth-qr"><img src="${url('assets/img/qr-site.svg')}" alt="رمز QR لفتح المنصة" width="96" height="96"><div><b>افتح المنصة على جوالك</b><span>امسح الرمز بكاميرا الجوال</span></div></div>
+          <div class="auth-qr"><button type="button" class="qr-zoom" aria-label="تكبير رمز QR"><img src="${url('assets/img/qr-site.svg')}" alt="رمز QR لفتح المنصة" width="96" height="96"></button><div><b>افتح المنصة على جوالك</b><span>امسح الرمز بكاميرا الجوال</span></div></div>
         </div>
       </aside></div>`
     $('#auth-slot').appendChild(content)
+    // الضغط على رمز QR يكبّره في وسط الشاشة (لتسهيل مسحه أثناء العرض)
+    $('.qr-zoom').addEventListener('click', () => {
+      const overlay = document.createElement('div')
+      overlay.className = 'qr-overlay'
+      overlay.innerHTML = `<img src="${url('assets/img/qr-site.svg')}" alt="رمز QR لفتح المنصة"><p>امسح الرمز بكاميرا الجوال — اضغط في أي مكان للإغلاق</p>`
+      const close = () => { overlay.remove(); document.removeEventListener('keydown', onKey) }
+      const onKey = (e) => { if (e.key === 'Escape') close() }
+      overlay.addEventListener('click', close)
+      document.addEventListener('keydown', onKey)
+      document.body.appendChild(overlay)
+    })
     content.removeAttribute('id')
     content.id = 'content'
   }
