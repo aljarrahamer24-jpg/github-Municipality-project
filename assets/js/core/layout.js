@@ -82,6 +82,7 @@ const Layout = (() => {
           <span class="chip-soft">الخدمات البلدية الإلكترونية</span>
           <h2>بلّغ عن المشكلة في دقيقة، وتابعها حتى تُحل.</h2>
           <ul>${['تقديم البلاغ مع الصور والموقع الدقيق', 'متابعة حالة البلاغ لحظة بلحظة', 'تقييم الخدمة بعد الإغلاق'].map((t) => `<li>${icon('circle-check')}${t}</li>`).join('')}</ul>
+          <div class="auth-qr"><img src="${url('assets/img/qr-site.svg')}" alt="رمز QR لفتح المنصة" width="96" height="96"><div><b>افتح المنصة على جوالك</b><span>امسح الرمز بكاميرا الجوال</span></div></div>
         </div>
       </aside></div>`
     $('#auth-slot').appendChild(content)

@@ -922,6 +922,10 @@ table {
 .auth-aside li { display: flex; align-items: center; gap: 8px; color: rgb(255 255 255 / 0.8); }
 .auth-aside li + li { margin-top: 12px; }
 .auth-aside li .icon { color: var(--secondary-300); }
+.auth-qr { display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: 16px; background: rgb(255 255 255 / 0.08); }
+.auth-qr img { flex: none; border-radius: 8px; background: #fff; }
+.auth-qr b { display: block; font-size: 15px; }
+.auth-qr span { font-size: 13px; color: rgb(255 255 255 / 0.75); }
 .chip-soft { display: inline-block; padding: 4px 12px; border-radius: 999px; background: rgb(255 255 255 / 0.1); font-size: 12px; }
 .strength { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
 .strength span { height: 6px; border-radius: 999px; background: var(--muted); }
