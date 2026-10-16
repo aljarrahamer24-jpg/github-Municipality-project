@@ -23,7 +23,7 @@ App.page({}, async () => {
       await sb.auth.signOut()
       return fail('الحساب التجريبي غير موجود أو موقوف.')
     }
-    App.go(App.homeUrl(profile.role))
+    App.go(App.afterLoginUrl(profile.role, profile.id))
   } catch (err) {
     fail(toAppError(err).message)
   }

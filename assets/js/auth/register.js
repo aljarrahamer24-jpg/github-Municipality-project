@@ -50,7 +50,7 @@ App.page({ guestOnly: true }, async () => {
         if (data.user && data.user.identities && data.user.identities.length === 0) {
           throw new AppError('هذا البريد الإلكتروني مسجل مسبقاً.')
         }
-        if (data.session) return App.go(App.homeUrl('citizen'))
+        if (data.session) return App.go(App.afterLoginUrl('citizen', data.user?.id))
         $('#confirm-email').textContent = v.email
         $('#register-step').hidden = true
         $('#register-confirm').hidden = false

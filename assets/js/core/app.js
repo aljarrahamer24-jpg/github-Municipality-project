@@ -17,6 +17,23 @@ const App = {
 
   homeUrl: (role) => url(HOME_BY_ROLE[role] || 'index.html'),
 
+  // بعد تسجيل الدخول: المواطن في أول دخول له (على هذا الجهاز) يرى الصفحة التعريفية (الواجهة)
+  // وفيها "كيف تعمل المنصة" ليتعلم خطوات تقديم البلاغ، وبعدها يذهب للوحته مباشرة
+  afterLoginUrl(role, userId) {
+    if (role === 'citizen' && userId) {
+      const key = `welcomed:${userId}`
+      try {
+        if (!localStorage.getItem(key)) {
+          localStorage.setItem(key, '1')
+          return url('home.html')
+        }
+      } catch {
+        /* التخزين المحلي غير متاح — نكمل للوحة */
+      }
+    }
+    return this.homeUrl(role)
+  },
+
   go(path) {
     this._leaving = true
     location.href = path

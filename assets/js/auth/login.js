@@ -25,7 +25,7 @@ App.page({ guestOnly: true }, async () => {
           await sb.auth.signOut()
           throw new AppError('هذا الحساب موقوف. تواصل مع إدارة البلدية.')
         }
-        App.go(App.homeUrl(profile.role))
+        App.go(App.afterLoginUrl(profile.role, profile.id))
       }, 'جارٍ الدخول...')
     } catch (err) {
       showAlert(toAppError(err).message)
