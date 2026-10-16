@@ -1483,6 +1483,30 @@ body:not(.app-ready)::after {
   .xxl-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
+/* ---- حركة عند تمرير الماوس: العناصر القابلة للضغط "تنبثق" للأمام ---- */
+.tile, .service, .card.stat, .c-card, .notif-item, .event-item, .screen-link, .upload-zone, .photo-btn, .swatch-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+.tile .icon-box, .service .icon-box, .card.stat .icon-box { transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease; }
+.btn { transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s; }
+@media (hover: hover) {
+  /* بطاقات الاختيار (أنواع المشاكل) والخدمات: تكبير وارتفاع مع ظل */
+  .tile:hover, .service:hover { transform: translateY(-4px) scale(1.03); border-color: var(--primary-300); background: var(--surface); box-shadow: var(--shadow-pop); z-index: 1; }
+  .tile:hover .icon-box, .service:hover .icon-box { --bg: var(--primary-700); --fg: #fff; transform: scale(1.1); }
+  .tile.active:hover { background: var(--primary-50); }
+  /* بطاقات الإحصائيات */
+  .card.stat:hover { transform: translateY(-4px); box-shadow: var(--shadow-pop); }
+  .card.stat:hover .icon-box { transform: scale(1.1); }
+  /* عناصر القوائم: تتحرك قليلاً للأمام */
+  .c-card:hover, .notif-item:hover, .screen-link:hover { transform: translateX(-4px); }
+  .event-item:hover { transform: translateX(-4px); }
+  /* منطقة رفع الصور والأزرار */
+  .upload-zone:hover { transform: scale(1.01); }
+  .swatch-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-pop); }
+  .btn-primary:hover, .btn-accent:hover, .btn-secondary:hover, .btn-outline:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+  .btn:active { transform: translateY(0) scale(0.98); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
