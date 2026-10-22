@@ -330,7 +330,18 @@ App.page({ roles: ['citizen'] }, async () => {
     $$('#ai-photo, #ai-mic, #ai-analyze').forEach((b) => (b.disabled = true))
     aiStatus('busy', busyText)
     try {
-      await applySuggestion(await fn(), file)
+      const r = await fn()
+      // الصورة أو الكلام لا يخص مشكلة بلدية (مثل صورة طاولة أو غرفة): لا نعبّئ البلاغ ولا نرفق الصورة
+      if (r.is_municipal_issue === false) {
+        aiStatus(
+          'error',
+          file
+            ? 'الصورة لا تُظهر مشكلة من اختصاص البلدية. صوّر المشكلة نفسها (مثل: حفرة في الطريق، شجرة مكسورة، تسرب مياه أو صرف صحي، نفايات، عمود إنارة معطل) وحاول مرة أخرى.'
+            : 'الوصف لا يبدو مشكلة من اختصاص البلدية. اكتب المشكلة بوضوح (مثل: في حفرة كبيرة جنب المدرسة) وحاول مرة أخرى.',
+        )
+        return
+      }
+      await applySuggestion(r, file)
     } catch (err) {
       if (file) uploader.addFiles([file])
       aiStatus('error', `${toAppError(err).message} يمكنك إكمال البلاغ يدوياً${file ? ' — أضفنا صورتك للبلاغ' : ''}.`)
