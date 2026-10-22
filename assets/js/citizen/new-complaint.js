@@ -92,18 +92,52 @@ App.page({ roles: ['citizen'] }, async () => {
   uploader.addEventListener('files-change', () => {
     if (hasPhoto()) uploader.closest('.field').classList.remove('is-invalid')
     paint()
+    checkPhotos()
   })
+
+  // فحص صور خانة "صورة المكان" بالذكاء الاصطناعي: الصورة التي لا تُظهر مشكلة بلدية (مثل طاولة أو غرفة) تُحذف.
+  // إذا تعذّر الفحص (الخدمة متوقفة أو تجاوز حد الطلبات) تُقبل الصورة حتى لا يتعطل تقديم البلاغ.
+  const checked = new WeakSet()
+  let checking = 0
+  const photoCheck = (type, text) => {
+    $('#photo-check').hidden = !text
+    $('#photo-check').innerHTML = !text ? '' : type === 'busy' ? `<p class="flex items-center gap-2 text-sm c-2">${icon('loader', 'spin')}${esc(text)}</p>` : alertBox(type, esc(text))
+  }
+  async function checkPhotos() {
+    for (const f of uploader.getFiles()) {
+      if (checked.has(f)) continue
+      checked.add(f)
+      checking++
+      photoCheck('busy', 'جارٍ التحقق من الصورة...')
+      paint()
+      try {
+        const r = await AI.analyzeImage(await AI.compressImage(f))
+        if (r.is_municipal_issue === false) {
+          uploader.removeFile(f)
+          photoCheck('error', 'تم حذف الصورة لأنها لا تُظهر مشكلة من اختصاص البلدية. أضف صورة للمشكلة نفسها (مثل: حفرة في الطريق، شجرة مكسورة، تسرب مياه أو صرف صحي، نفايات، عمود إنارة معطل).')
+          continue
+        }
+        photoCheck('', '')
+      } catch {
+        photoCheck('', '')
+      } finally {
+        checking--
+        paint()
+      }
+    }
+  }
 
   const areaOk = () => areaName().length >= 2
   // صورة واحدة على الأقل إلزامية
   const hasPhoto = () => uploader.getFiles().length > 0
-  const valid = () => [!!s.cat && hasPhoto(), title.value.trim().length >= 5 && desc.value.trim().length >= 15, !!s.pos && areaOk(), true]
+  const valid = () => [!!s.cat && hasPhoto() && !checking, title.value.trim().length >= 5 && desc.value.trim().length >= 15, !!s.pos && areaOk(), true]
   const catObj = () => categories.find((c) => c.id === s.cat)
 
   function showErrors() {
     if (s.step === 0) {
       $('#err-cat').hidden = !!s.cat
       $('#photo-field').classList.toggle('is-invalid', !hasPhoto())
+      if (checking) toast('انتظر حتى ينتهي التحقق من الصورة.', 'info')
     }
     if (s.step === 1) {
       title.closest('.field').classList.toggle('is-invalid', title.value.trim().length < 5)
@@ -305,7 +339,10 @@ App.page({ roles: ['citizen'] }, async () => {
     if (r.description) desc.value = r.description
     $('#desc-count').textContent = desc.value.length
     if (r.location_text && !landmark.value) landmark.value = r.location_text
-    if (file) uploader.addFiles([file])
+    if (file) {
+      checked.add(file) // حُلّلت مسبقاً في البلاغ السريع
+      uploader.addFiles([file])
+    }
     // الموقع من GPS الجهاز فقط — لا يُخمَّن من الذكاء الاصطناعي
     aiStatus('busy', 'جارٍ تحديد موقعك من GPS...')
     const pos = await getPosition().catch(() => null)
@@ -343,7 +380,10 @@ App.page({ roles: ['citizen'] }, async () => {
       }
       await applySuggestion(r, file)
     } catch (err) {
-      if (file) uploader.addFiles([file])
+      if (file) {
+        checked.add(file)
+        uploader.addFiles([file])
+      }
       aiStatus('error', `${toAppError(err).message} يمكنك إكمال البلاغ يدوياً${file ? ' — أضفنا صورتك للبلاغ' : ''}.`)
     } finally {
       $$('#ai-photo, #ai-mic, #ai-analyze').forEach((b) => (b.disabled = false))

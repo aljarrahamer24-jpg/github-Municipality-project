@@ -380,6 +380,10 @@ function initUploads(root = document) {
     })
     box.getFiles = () => [...files]
     box.addFiles = add
+    box.removeFile = (f) => {
+      files = files.filter((x) => x !== f)
+      draw()
+    }
     box.clear = () => {
       files = []
       draw()
