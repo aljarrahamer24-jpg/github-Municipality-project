@@ -124,7 +124,7 @@ docs/report/          تقارير التخرج (Word) + شعار الكلية �
 ## 7. النشر والروابط
 
 - **Supabase:** المشروع `lrlriimsfscgritbcqjs` (الرابط والمفتاح العام في config.js).
-- **Netlify:** كان `baladiya-gaza-6c9526.netlify.app` — **الحساب أُوقف (suspended) والموقع حُذف**. لا تستخدمه.
+- **Netlify:** كان `baladiya-gaza-6c9526.netlify.app` — **الحساب أُوقف (suspended) والموقع حُذف**. لا تستخدمه. المستخدم أرسل طلب استرجاع للدعم (Recover a suspended account) بتاريخ 2026-11-01 وينتظر الرد بالإيميل.
 - **البديل: GitHub Pages** من الفرع `claude/municipal-complaints-ui-design-ry84z5`، المجلد الجذر:
   `https://aljarrahamer24-jpg.github.io/github-Municipality-project/`
   المستخدم يفعّله بنفسه (Settings ← Pages ← Deploy from a branch). محاولة تفعيله عبر API رُفضت من نظام الصلاحيات.
